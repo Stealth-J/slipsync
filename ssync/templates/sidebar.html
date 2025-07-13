@@ -1,0 +1,50 @@
+{% load static %}
+
+<aside class="sidebar" id="sidebar">
+    <div class="d-flex flex-column justify-content-between h-100 sidebar-inner">
+    <!-- Top: Brand + Toggle -->
+        <div>
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <a href="/"><img src="{% static "img/slipsync_brand.png" %}" width="50" height = "50" alt=""></a>
+                <button id="darkModeBtn" class="btn btn-sm btn-outline-perfectblue" title="Toggle Dark Mode" >
+                    <i class="bi bi-moon-fill" id="themeIcon" ></i>
+                </button>
+                
+            </div>
+
+            <!-- Nav items -->
+            <ul class="nav flex-column">
+                <li class="nav-item"><a class="nav-link {% if request.path == '/' %} active {% endif %}" href="/"><i class="bi bi-house-door me-2"></i>Dashboard</a></li>
+
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle {% if 'convert-' in request.path %} active {% endif %}" href="#" id="convertDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="bi bi-arrow-left-right me-2"></i>Convert To
+                    </a>
+                    
+                    <ul class="dropdown-menu" aria-labelledby="convertDropdown">
+                        <li><a class="dropdown-item {% if request.resolver_match.kwargs.slip == 'sporty' %} active {% endif %}" href="{% url "convert" 'sporty' %}">SportyBet</a></li>
+                        <li><a class="dropdown-item {% if request.resolver_match.kwargs.slip == 'bet9ja' %} active {% endif %}" href="{% url "convert" 'bet9ja' %}">Bet9ja</a></li>
+                        <li><a class="dropdown-item {% if request.resolver_match.kwargs.slip == 'betking' %} active {% endif %}" href="{% url "convert" 'betking' %}">BetKing</a></li>
+                        <li><a class="dropdown-item {% if request.resolver_match.kwargs.slip == 'nairabet' %} active {% endif %}" href="{% url "convert" 'nairabet' %}">NairaBet</a></li>
+                    </ul>
+                </li>
+
+                <li class="nav-item"><a class="nav-link {% if request.path == '/settings' %} active {% endif %}" href="{% url "settings" %}"><i class="bi bi-gear me-2"></i>Settings</a></li>
+                <li class="nav-item"><a class="nav-link {% if request.path == '/contact' %} active {% endif %} " href="{% url "contact" %}"><i class="bi bi-telephone me-2"></i>Contact</a></li>
+            </ul>
+        </div>
+
+    <!-- Footer -->
+        <div class="pt-3 border-main-top">
+            <div class="d-flex gap-2 mb-2">
+                <a href="https://github.com/Stealth-J" class="btn btn-sm btn-outline-perfectblue"><i class="bi bi-github"></i></a>
+                <a href="https://x.com/yameh_office" class="btn btn-sm btn-outline-perfectblue"><i class="bi bi-twitter"></i></a>
+            </div>
+            <div class="d-flex align-items-center gap-2 mt-3">
+                <img src="{% static "img/slipsync_brand.png" %}" alt="Logo" width="24" height="24" class="rounded"/>
+                <small class="text-quiet">© 2025 Slipsync</small>
+            </div>
+
+        </div>
+    </div>
+</aside>

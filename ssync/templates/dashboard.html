@@ -1,0 +1,50 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+	<!-- Welcome Section -->
+    <div class="hero-card mb-5">
+        <div class="hero-accent"></div>
+
+        <div class="hero-text">
+            <div class="hero-wrapper text-center">
+                <img src="{% static 'img/hero.png' %}" alt="Slipsync Hero" class="img-fluid" id="heroImg">
+            </div>
+
+            <a href="#" class="btn btn-outline-perfectblue hero-btn">Convert Now</a>
+        </div>
+    </div>
+
+
+
+	<!-- Supported Platforms -->
+	<div class="row g-3 align-items-stretch">
+		<div class="col-6 col-md-3">
+			<div class="bg-second text-center p-3 rounded border-main h-100 platforms">
+				<i class="bi bi-controller fs-3 text-perfect"></i>
+				<p class="mt-2 mb-0 text-main fw-semibold">SportyBet</p>
+			</div>
+		</div>
+		<div class="col-6 col-md-3">
+			<div class="bg-second text-center p-3 rounded border-main h-100 platforms">
+				<i class="bi bi-cash fs-3 text-perfect"></i>
+				<p class="mt-2 mb-0 text-main fw-semibold">Bet9ja</p>
+			</div>
+		</div>
+		<div class="col-6 col-md-3">
+			<div class="bg-second text-center p-3 rounded border-main h-100 platforms">
+				<i class="bi bi-bank fs-3 text-perfect"></i>
+				<p class="mt-2 mb-0 text-main fw-semibold">BetKing</p>
+			</div>
+		</div>
+		<div class="col-6 col-md-3">
+			<div class="bg-second text-center p-3 rounded border-main h-100">
+				<i class="bi bi-wallet2 fs-3 text-perfect"></i>
+				<p class="mt-2 mb-0 text-main fw-semibold">NairaBet</p>
+			</div>
+		</div>
+	</div>
+
+	
+
+{% endblock %}

@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="text-center mb-4">
+	<h1 class="fw-bold page-header">Contact Us</h1>
+	<p class="text-quiet">We’d love to hear from you. Ask a question, suggest a feature, or report an issue.</p>
+</div>
+
+<div class="row g-4">
+	<!-- Newsletter -->
+	<div class="col-md-6">
+		<div class="card card-body border-main rounded bg-second h-100">
+			<h5 class="fw-bold mb-3 form-header"><i class="bi bi-envelope me-2"></i> Subscribe to Our Newsletter</h5>
+			<form>
+				<div class="form-floating mb-3">
+					<input type="email" class="form-control custom-input" id="newsletterEmail" placeholder="Email">
+					<label for="newsletterEmail">Email address</label>
+				</div>
+				<button type="submit" class="btn btn-outline-perfectblue px-4">Subscribe</button>
+				<small class="text-quiet d-block mt-2">No spam, unsubscribe anytime.</small>
+				<div class="text-danger mt-1" style="display: none;">Please enter a valid email.</div>
+			</form>
+		</div>
+	</div>
+
+	<!-- Complaints -->
+	<div class="col-md-6">
+		<div class="card card-body border-main rounded bg-second h-100">
+			<h5 class="fw-bold mb-3 form-header"><i class="bi bi-megaphone me-2"></i> File a Complaint or Suggestion</h5>
+			<form>
+				<div class="form-floating mb-3">
+					<input type="text" class="form-control custom-input" id="complainName" placeholder="Your Name">
+					<label for="complainName">Your Name (optional)</label>
+				</div>
+				<div class="form-floating mb-3">
+					<textarea class="form-control custom-input" placeholder="Your complaint or suggestion" id="complainBox" style="height: 120px;" required></textarea>
+					<label for="complainBox">Your Message</label>
+				</div>
+				<button type="submit" class="btn btn-outline-perfectblue px-4">Submit Feedback</button>
+			</form>
+		</div>
+	</div>
+</div>
+{% endblock %}

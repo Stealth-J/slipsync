@@ -6,15 +6,10 @@ import sys
 
 def main():
     """Run administrative tasks."""
-<<<<<<< HEAD
     os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'slipsync.settings')
-=======
-<<<<<<< HEAD
     os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'splitsync.settings')
-=======
+
     os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'slipsync.settings')
->>>>>>> c8fd35f (Name  was different so i created new one)
->>>>>>> d68a240 (Initial commit)
     try:
         from django.core.management import execute_from_command_line
     except ImportError as exc:

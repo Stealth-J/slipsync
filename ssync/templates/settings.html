@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+    <div class="text-center">
+        <h1 class="page-header">Settings</h1>
+    </div>
+
+	<!-- Theme Settings -->
+	<div class="bg-second border-main rounded p-4 mb-4 text-main">
+		<h5 class="fw-bold form-header">Preferences</h5>
+		<div class="form-check form-switch mt-2">
+			<input class="form-check-input" type="checkbox" id="showExcluded">
+			<label class="form-check-label" for="showExcluded">Show excluded platforms</label>
+		</div>
+	</div>
+
+	<!-- Terms Modal Trigger -->
+	<div class="bg-second border-main rounded p-4 mb-4 text-main">
+		<h5 class="fw-bold form-header">Documentation</h5>
+		<p class>Read our terms, conditions, and guidelines.</p>
+		<button class="btn btn-outline-perfectblue" data-bs-toggle="modal" data-bs-target="#termsModal">
+			View Terms & Conditions
+		</button>
+	</div>
+
+
+	<!-- Modal -->
+	<div class="modal fade" id="termsModal" tabindex="-1" aria-labelledby="termsModalLabel" aria-hidden="true">
+		<div class="modal-dialog modal-dialog-centered modal-border">
+			<div class="modal-content bg-main text-main">
+				<div class="modal-header ">
+					<h5 class="modal-title" id="termsModalLabel">Terms and Conditions</h5>
+				</div>
+				<div class="modal-body ">
+					<p>This project is a demo. By using it, you agree to nothing in particular.</p>
+					<p>Feel free to explore and test the features freely.</p>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-outline-perfectblue" data-bs-dismiss="modal">Close</button>
+				</div>
+			</div>
+		</div>
+	</div>
+
+
+{% endblock %}

@@ -1,0 +1,192 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content  %}
+
+<h1 class="page-header"> First word up here is {{text}} </h1>
+<h3>Lets test the waters here with h3</h3>
+
+
+<style>
+
+
+</style>
+
+<div class="container py-4">
+  <!-- Row 1: Input Group -->
+  <div class="input-card mb-3">
+        <div class="row align-items-end">
+            <div class="col-10 col-md-7">
+                <input type="text" class="form-control slip-link custom-input" placeholder="Enter slip link" > 
+            </div>
+            <div class="col-10 col-md-5 ms-auto d-flex justify-content-end">
+                <div class="d-flex btn-group-nav" style="gap: 0.5rem ;">
+                    <button class="btn btn-sm btn-outline-perfectblue">&lt;</button>
+                    <button class="btn btn-sm btn-outline-perfectblue px-4">Bet9ja</button>
+                    <button class="btn btn-sm btn-outline-perfectblue">&gt;</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="text-end mt-3">
+            <button class="btn btn-sm btn-outline-perfectblue px-4">Convert Slip</button>
+        </div>
+
+    </div>
+
+  <!-- Row 3: Result Section -->
+  <div class="result-card mt-5">
+    <div class="result-header">
+        <div class="d-flex align-items-center gap-3">
+            <div class="result-site"><img src="{% static "img/b9_logo.png" %}" height="30" alt=""></div>
+            
+            <a class="result-link text-decoration-none" href="https://bet9ja.com/slip/ABC123">
+                https://bet9ja.com/slip/ABC123
+            </a>
+        </div>
+        <div class="result-link-meta result-meta">
+            <span class="selections-number badge bg-success" title="10 selections">10</span>
+        </div>
+    </div>
+
+    <!-- Game List -->
+    <div class="slip">
+      
+        <div class="game-row">
+            <div class="left">
+                <div class="match">
+                    <strong>Manchester United vs Chelsea</strong>
+                </div>
+                <div class="pick-text">Over 2.5</div>
+            </div>
+            <div class="right">
+                <h5 class="odd">1.85</h5>
+            </div>
+        </div>
+        <div class="game-row">
+            <div class="left">
+                <div class="match">
+                    <strong>Roma vs Lazio</strong>
+                </div>
+                <div class="pick-text">Over 2.5</div>
+            </div>
+            <div class="right">
+                <h5 class="odd">1.19</h5>
+            </div>
+        </div>
+        <div class="game-row">
+            <div class="left">
+                <div class="match">
+                    <strong>Athletico Madrid vs Sevilla</strong>
+                </div>
+                <div class="pick-text">Over 2.5</div>
+            </div>
+            <div class="right">
+                <h5 class="odd">3.24</h5>
+            </div>
+        </div>
+        <div class="game-row">
+            <div class="left">
+                <div class="match">
+                    <strong>Newcastle United vs Brighton</strong>
+                </div>
+                <div class="pick-text">Over 1.5</div>
+            </div>
+            <div class="right">
+                <h5 class="odd">1.5</h5>
+            </div>
+        </div>
+        <div class="game-row">
+            <div class="left">
+                <div class="match">
+                    <strong>PSG vs Monaco</strong>
+                </div>
+                <div class="pick-text">3 - 0</div>
+            </div>
+            <div class="right">
+                <h5 class="odd">15</h5>
+            </div>
+        </div>
+        <div class="game-row">
+            <div class="left">
+                <div class="match">
+                    <strong>Ajax vs Feyenoord</strong>
+                </div>
+                <div class="pick-text">Over 2.5</div>
+            </div>
+            <div class="right">
+                <h5 class="odd">1.85</h5>
+            </div>
+        </div>
+        <div class="game-row">
+            <div class="left">
+                <div class="match">
+                    <strong>Inter vs AC Milan</strong>
+                </div>
+                <div class="pick-text">Over 2.5</div>
+            </div>
+            <div class="right">
+                <h5 class="odd">1.85</h5>
+            </div>
+        </div>
+        <div class="game-row">
+            <div class="left">
+                <div class="match">
+                    <strong>Arsenal vs Liverpool</strong>
+                </div>
+                <div class="pick-text">Over 2.5</div>
+            </div>
+            <div class="right">
+                <h5 class="odd">1.85</h5>
+            </div>
+        </div>
+        <div class="game-row">
+            <div class="left">
+                <div class="match">
+                    <strong>Juventus vs Napoli</strong>
+                </div>
+                <div class="pick-text">Over 2.5</div>
+            </div>
+            <div class="right">
+                <h5 class="odd">1.85</h5>
+            </div>
+        </div>
+        <div class="game-row">
+            <div class="left">
+                <div class="match">
+                    <strong>Bayern vs Dortmund</strong>
+                </div>
+                <div class="pick-text">Over 2.5</div>
+            </div>
+            <div class="right">
+                <h5 class="odd">1.85</h5>
+            </div>
+        </div>
+        <div class="game-row">
+            <div class="left">
+                <div class="match">
+                    <strong>Real Madrid vs Barcelona</strong>
+                </div>
+                <div class="pick-text">Over 2.5</div>
+            </div>
+            <div class="right">
+                <h5 class="odd">1.85</h5>
+            </div>
+        </div>
+
+    <!-- Card Footer -->
+    <div class="result-footer text-end">
+      <h4> 18.47</h4>
+    </div>
+
+    <!-- Mobile Info Grouped Below -->
+    <div class="muted-info">
+        <div>3:45 PM &middot; July 11, 2025</div>
+        <div>https://bet9ja.com/slip/ABC123</div>
+    </div>
+  </div>
+</div>
+
+
+
+{% endblock %}
