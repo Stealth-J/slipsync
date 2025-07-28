@@ -1,192 +1,244 @@
 {% extends "base.html" %}
 {% load static %}
+{% load custom_filters %}
 
 {% block content  %}
 
-<h1 class="page-header"> First word up here is {{text}} </h1>
-<h3>Lets test the waters here with h3</h3>
-
-
-<style>
-
-
-</style>
-
-<div class="container py-4">
-  <!-- Row 1: Input Group -->
-  <div class="input-card mb-3">
-        <div class="row align-items-end">
-            <div class="col-10 col-md-7">
-                <input type="text" class="form-control slip-link custom-input" placeholder="Enter slip link" > 
-            </div>
-            <div class="col-10 col-md-5 ms-auto d-flex justify-content-end">
-                <div class="d-flex btn-group-nav" style="gap: 0.5rem ;">
-                    <button class="btn btn-sm btn-outline-perfectblue">&lt;</button>
-                    <button class="btn btn-sm btn-outline-perfectblue px-4">Bet9ja</button>
-                    <button class="btn btn-sm btn-outline-perfectblue">&gt;</button>
-                </div>
-            </div>
-        </div>
-
-        <div class="text-end mt-3">
-            <button class="btn btn-sm btn-outline-perfectblue px-4">Convert Slip</button>
-        </div>
-
-    </div>
-
-  <!-- Row 3: Result Section -->
-  <div class="result-card mt-5">
-    <div class="result-header">
-        <div class="d-flex align-items-center gap-3">
-            <div class="result-site"><img src="{% static "img/b9_logo.png" %}" height="30" alt=""></div>
-            
-            <a class="result-link text-decoration-none" href="https://bet9ja.com/slip/ABC123">
-                https://bet9ja.com/slip/ABC123
-            </a>
-        </div>
-        <div class="result-link-meta result-meta">
-            <span class="selections-number badge bg-success" title="10 selections">10</span>
-        </div>
-    </div>
-
-    <!-- Game List -->
-    <div class="slip">
-      
-        <div class="game-row">
-            <div class="left">
-                <div class="match">
-                    <strong>Manchester United vs Chelsea</strong>
-                </div>
-                <div class="pick-text">Over 2.5</div>
-            </div>
-            <div class="right">
-                <h5 class="odd">1.85</h5>
-            </div>
-        </div>
-        <div class="game-row">
-            <div class="left">
-                <div class="match">
-                    <strong>Roma vs Lazio</strong>
-                </div>
-                <div class="pick-text">Over 2.5</div>
-            </div>
-            <div class="right">
-                <h5 class="odd">1.19</h5>
-            </div>
-        </div>
-        <div class="game-row">
-            <div class="left">
-                <div class="match">
-                    <strong>Athletico Madrid vs Sevilla</strong>
-                </div>
-                <div class="pick-text">Over 2.5</div>
-            </div>
-            <div class="right">
-                <h5 class="odd">3.24</h5>
-            </div>
-        </div>
-        <div class="game-row">
-            <div class="left">
-                <div class="match">
-                    <strong>Newcastle United vs Brighton</strong>
-                </div>
-                <div class="pick-text">Over 1.5</div>
-            </div>
-            <div class="right">
-                <h5 class="odd">1.5</h5>
-            </div>
-        </div>
-        <div class="game-row">
-            <div class="left">
-                <div class="match">
-                    <strong>PSG vs Monaco</strong>
-                </div>
-                <div class="pick-text">3 - 0</div>
-            </div>
-            <div class="right">
-                <h5 class="odd">15</h5>
-            </div>
-        </div>
-        <div class="game-row">
-            <div class="left">
-                <div class="match">
-                    <strong>Ajax vs Feyenoord</strong>
-                </div>
-                <div class="pick-text">Over 2.5</div>
-            </div>
-            <div class="right">
-                <h5 class="odd">1.85</h5>
-            </div>
-        </div>
-        <div class="game-row">
-            <div class="left">
-                <div class="match">
-                    <strong>Inter vs AC Milan</strong>
-                </div>
-                <div class="pick-text">Over 2.5</div>
-            </div>
-            <div class="right">
-                <h5 class="odd">1.85</h5>
-            </div>
-        </div>
-        <div class="game-row">
-            <div class="left">
-                <div class="match">
-                    <strong>Arsenal vs Liverpool</strong>
-                </div>
-                <div class="pick-text">Over 2.5</div>
-            </div>
-            <div class="right">
-                <h5 class="odd">1.85</h5>
-            </div>
-        </div>
-        <div class="game-row">
-            <div class="left">
-                <div class="match">
-                    <strong>Juventus vs Napoli</strong>
-                </div>
-                <div class="pick-text">Over 2.5</div>
-            </div>
-            <div class="right">
-                <h5 class="odd">1.85</h5>
-            </div>
-        </div>
-        <div class="game-row">
-            <div class="left">
-                <div class="match">
-                    <strong>Bayern vs Dortmund</strong>
-                </div>
-                <div class="pick-text">Over 2.5</div>
-            </div>
-            <div class="right">
-                <h5 class="odd">1.85</h5>
-            </div>
-        </div>
-        <div class="game-row">
-            <div class="left">
-                <div class="match">
-                    <strong>Real Madrid vs Barcelona</strong>
-                </div>
-                <div class="pick-text">Over 2.5</div>
-            </div>
-            <div class="right">
-                <h5 class="odd">1.85</h5>
-            </div>
-        </div>
-
-    <!-- Card Footer -->
-    <div class="result-footer text-end">
-      <h4> 18.47</h4>
-    </div>
-
-    <!-- Mobile Info Grouped Below -->
-    <div class="muted-info">
-        <div>3:45 PM &middot; July 11, 2025</div>
-        <div>https://bet9ja.com/slip/ABC123</div>
-    </div>
-  </div>
+<div class="text-center p-2">
+    <h2 class="page-header">Convert to {{ platform }} </h2>
+    <p class="text-quiet mb-4">Paste a valid game code from any supported platform and instantly convert it to {{ platform }} format. Live games are not supported</p>
 </div>
 
 
+
+<div class="container py-4">
+  <!-- Row 1: Input Group -->
+    <div class="input-card mb-3">
+        <form hx-post="{% url "convert" platform %}" hx-target = "#betslip_content" hx-indicator = "#skeleton-loader">
+
+            <div class="row align-items-end">
+                <div class="col-10 col-md-7">
+                    <input type="text" class="form-control slip-link custom-input" placeholder="Enter slip link" name="slip_code" required> 
+                </div>
+                <div class="col-10 col-md-5 ms-auto d-flex justify-content-end">
+                    <div class="d-flex btn-group-nav" style="gap: 0.5rem ;">
+                        <button type="button" id="previousBtn" class="btn btn-sm btn-outline-perfectblue">&lt;</button>
+
+                        <div style="width: 12ch; text-align: center;">
+                            <button type="button" id="bettingSite" class="btn btn-sm btn-outline-perfectblue px-4" style="pointer-events: none;" value="{{ platform }}">{{ platform }}</button>
+                            <input type="hidden" id="siteInput" name="site" value="{{ platform }}">
+                        </div>
+
+                        <button type="button" id="nextBtn" class="btn btn-sm btn-outline-perfectblue">&gt;</button>
+                    </div>
+                </div>
+            </div>
+            
+
+            <div class="text-end mt-3">
+                <button class="btn btn-sm btn-outline-perfectblue px-4" type="submit">Convert Slip</button>
+            </div>
+        </form>
+
+
+    </div>
+
+
+    
+    <div id="betslip_wrapper">
+
+        <div class="result-card" id = "skeleton-loader" style="display: none; ">
+
+            <div class="skeleton-link"></div>
+
+            <!-- Repeat 10 times -->
+            <div class="skeleton-row" style="margin-top: 1rem;">
+                <div class="skeleton-title"></div>
+                <div class="skeleton-subtitle"></div>
+                <div class="skeleton-odd"></div>
+            </div>
+            <div class="skeleton-row" style="margin-top: 1rem;">
+                <div class="skeleton-title"></div>
+                <div class="skeleton-subtitle"></div>
+                <div class="skeleton-odd"></div>
+            </div>
+            <div class="skeleton-row" style="margin-top: 1rem;">
+                <div class="skeleton-title"></div>
+                <div class="skeleton-subtitle"></div>
+                <div class="skeleton-odd"></div>
+            </div>
+            <div class="skeleton-row" style="margin-top: 1rem;">
+                <div class="skeleton-title"></div>
+                <div class="skeleton-subtitle"></div>
+                <div class="skeleton-odd"></div>
+            </div>
+            <div class="skeleton-row" style="margin-top: 1rem;">
+                <div class="skeleton-title"></div>
+                <div class="skeleton-subtitle"></div>
+                <div class="skeleton-odd"></div>
+            </div>
+            <div class="skeleton-row" style="margin-top: 1rem;">
+                <div class="skeleton-title"></div>
+                <div class="skeleton-subtitle"></div>
+                <div class="skeleton-odd"></div>
+            </div>
+            <div class="skeleton-row" style="margin-top: 1rem;">
+                <div class="skeleton-title"></div>
+                <div class="skeleton-subtitle"></div>
+                <div class="skeleton-odd"></div>
+            </div>
+            <div class="skeleton-row" style="margin-top: 1rem;">
+                <div class="skeleton-title"></div>
+                <div class="skeleton-subtitle"></div>
+                <div class="skeleton-odd"></div>
+            </div>
+            <div class="skeleton-row" style="margin-top: 1rem;">
+                <div class="skeleton-title"></div>
+                <div class="skeleton-subtitle"></div>
+                <div class="skeleton-odd"></div>
+            </div>
+
+            <div class="skeleton-total"></div>
+                
+        </div>
+        
+        <div class="result-card mt-5" id="betslip_content">
+
+            
+            {% block slip_data_container %}
+                {% if slip_data %}
+                
+                    <div class="result-header">
+                        <div class="d-flex align-items-center gap-3">
+
+                            <div class="result-site"><img src="{% static logo %}" height="30" alt=""></div>
+                            
+                            <a class="result-link " href="https://bet9ja.com/slip/ABC123">
+                                https://bet9ja.com/slip/ABC123
+                            </a>
+                        </div>
+                        <div class="result-link-meta result-meta">
+                            <h4 class="selections-number text-success" title="number of games">{{ games_no }}</h4>
+                        </div>
+                    </div>
+
+                    <!-- Game List -->
+                    <div class="game-list">
+                        {% for game in slip_data %}
+                            <div class="game-card">
+                            
+                                <!-- Row -->
+                                <div class="game-main">
+                                    <div class="game-info">
+                                        <div class="game-line">
+                                            <span class="status-dot {{ game.status_class }}"></span>
+                                            <span class="pick">{{ game.pick }}</span>
+                                        </div>
+                                        <div class="pick-line">
+                                            <span class="teams fst-italic ">{{ game.home_team|dont_return_none }} - {{ game.away_team|dont_return_none }}</span>
+                                            <span class="market">{{ game.market_type }}</span>
+                                        </div>
+                                    </div>
+                                    <div class="odds">{{ game.odds }}</div>
+                                </div>
+
+                                <!-- Toggle-able Extra Info -->
+                                <hr class="text-quiet">
+                                <details class="game-details">
+                                    <summary class="fw-light">More info</summary>
+                                    <div class="extra-info">
+                                        <div>{{ game.start_time }}</div>
+                                        <div>{{ game.league }}</div>
+                                        {{ game.status }}
+                                    </div>
+                                </details>
+
+                            </div>
+                        {% endfor %}
+
+
+                            
+                        <!-- Card Footer -->
+                        <div class="result-footer text-end">
+                            <h4 title = "Estimated not definitive"> {{ total }}</h4>
+                        </div>
+
+                        <!-- Mobile Info Grouped Below -->
+                        <div class="muted-info">
+                            <div>{{ current_time }}</div>
+                            <div>https://bet9ja.com/slip/ABC123</div>
+                        </div>
+                    </div>
+
+                {% endif %}
+            {% endblock %}
+            
+        </div>
+
+    </div>
+    
+    
+    
+</div>
+
+
+{% endblock %}
+
+
+{% block script %}
+
+    <script>
+
+        let skeletonTimeout = null;
+        const skeleton = document.getElementById('skeleton-loader');
+
+        document.body.addEventListener('htmx:beforeRequest', function () {
+            
+            skeletonTimeout = setTimeout(() => {
+            skeleton.style.display = 'block';
+            }, 400); 
+        });
+
+        document.body.addEventListener('htmx:afterRequest', function () {
+            clearTimeout(skeletonTimeout);
+            skeleton.style.display = 'none';
+        });
+
+
+        const previousBtn = document.getElementById('previousBtn')
+        const nextBtn = document.getElementById('nextBtn')
+        const bettingSite = document.getElementById('bettingSite')
+        const sites = {{ sites|safe }}
+        const siteInput = document.getElementById('siteInput')
+        const length_ = sites.length;
+
+        function toggleBetSite(direction) {
+            let site = bettingSite.textContent
+            let index_ = sites.indexOf(site)
+
+            if (index_ === -1) {
+                index_ = 0;  
+            }
+
+            if (direction === 'previous'){
+                nextIndex = (index_ - 1 + length_) % length_;
+            } else {
+                nextIndex = (index_ + 1 ) % length_;
+            }
+            
+            // console.log(index_, direction)
+            bettingSite.textContent = sites[nextIndex]
+            siteInput.value = sites[nextIndex]
+        }
+
+        previousBtn.addEventListener('click', () => {
+            toggleBetSite('previous')
+        });
+
+        nextBtn.addEventListener('click', () => {
+            toggleBetSite('next')
+        })
+
+    </script>
 
 {% endblock %}

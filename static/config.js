@@ -53,17 +53,14 @@ function toggleSidebar() {
   backdrop.classList.toggle('d-none');
 }
 
-document.querySelector("form")?.addEventListener("submit", function (e) {
-	e.preventDefault();
-	const email = document.getElementById("newsletterEmail").value;
-	const errorDiv = this.querySelector(".text-danger");
 
-	if (!email || !email.includes("@")) {
-		errorDiv.style.display = "block";
-	} else {
-		errorDiv.style.display = "none";
-		alert("Subscribed successfully!");
-		this.reset();
-	}
-});
 
+// {'home_team': 'Linfield FC', 'away_team': 'Shelbourne FC', 'league': 'UEFA Champions League', 'start_time': '2025-07-16 18:45:00', 'status': 'Not start', 'market': '1X2', 'pick': 'Away', 'odds': '2.66'}
+// {'home_team': 'FC Dinamo Minsk', 'away_team': 'Ludogorets', 'league': 'UEFA Champions League', 'start_time': '2025-07-16 18:45:00', 'status': 'Not start', 'market': 'Over/Under', 'pick': 'Under 2.5', 'odds': '1.92'}
+// {'home_team': 'Linfield FC', 'away_team': 'Shelbourne FC', 'league': 'UEFA Champions League', 'start_time': '2025-07-16 18:45:00', 'status': 'Not start', 'market': 'Draw No Bet', 'pick': 'Home', 'odds': '1.90'}
+// {'home_team': 'Rangers', 'away_team': 'Panathinaikos', 'league': 'UEFA Champions League', 'start_time': '2025-07-22 18:45:00', 'status': 'Not start', 'market': 'Draw No Bet', 'pick': 'Home', 
+// 'odds': '1.46'}
+// {'home_team': 'Port Melbourne Sharks', 'away_team': 'Dandenong Thunder', 'league': 'Victoria, NPL', 'start_time': '2025-07-18 10:15:00', 'status': 'Not start', 'market': '1X2', 'pick': 'Home', 'odds': '6.25'}
+// {'home_team': 'Santos FC SP', 'away_team': 'CA Paranaense PR', 'league': 'U20 Brasileiro Serie A', 'start_time': '2025-07-16 18:00:00', 'status': 'Not start', 'market': '1X2', 'pick': 'Draw', 'odds': '3.80'}
+// {'home_team': 'RB Bragantino SP', 'away_team': 'SC Internacional RS', 'league': 'U20 Brasileiro Serie A', 'start_time': '2025-07-16 18:00:00', 'status': 'Not start', 'market': '1X2', 'pick': 
+// 'Home', 'odds': '1.60'}

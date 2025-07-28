@@ -42,3 +42,24 @@
 	</div>
 </div>
 {% endblock %}
+
+
+{% block script %}
+
+	<script>
+		document.querySelector("form")?.addEventListener("submit", function (e) {
+		e.preventDefault();
+		const email = document.getElementById("newsletterEmail").value;
+		const errorDiv = this.querySelector(".text-danger");
+
+		if (!email || !email.includes("@")) {
+			errorDiv.style.display = "block";
+		} else {
+			errorDiv.style.display = "none";
+			alert("Subscribed successfully!");
+			this.reset();
+		}
+	});
+
+	</script>
+{% endblock %}

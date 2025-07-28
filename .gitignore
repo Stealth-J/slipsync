@@ -25,3 +25,7 @@ staticfiles/
 # Media files
 media/
 .migrations/
+
+# ignore folder
+stes_json/
+test/

@@ -22,11 +22,13 @@
                     </a>
                     
                     <ul class="dropdown-menu" aria-labelledby="convertDropdown">
-                        <li><a class="dropdown-item {% if request.resolver_match.kwargs.slip == 'sporty' %} active {% endif %}" href="{% url "convert" 'sporty' %}">SportyBet</a></li>
-                        <li><a class="dropdown-item {% if request.resolver_match.kwargs.slip == 'bet9ja' %} active {% endif %}" href="{% url "convert" 'bet9ja' %}">Bet9ja</a></li>
-                        <li><a class="dropdown-item {% if request.resolver_match.kwargs.slip == 'betking' %} active {% endif %}" href="{% url "convert" 'betking' %}">BetKing</a></li>
-                        <li><a class="dropdown-item {% if request.resolver_match.kwargs.slip == 'nairabet' %} active {% endif %}" href="{% url "convert" 'nairabet' %}">NairaBet</a></li>
+                        {% for site in sites %}
+                            <li><a class="dropdown-item {% if request.resolver_match.kwargs.platform|lower == site|lower %} active {% endif %}" href="{% url "convert" site %}">{{site}}</a></li>
+                        {% endfor %}
+                        
                     </ul>
+
+                    
                 </li>
 
                 <li class="nav-item"><a class="nav-link {% if request.path == '/settings' %} active {% endif %}" href="{% url "settings" %}"><i class="bi bi-gear me-2"></i>Settings</a></li>
@@ -36,9 +38,10 @@
 
     <!-- Footer -->
         <div class="pt-3 border-main-top">
-            <div class="d-flex gap-2 mb-2">
-                <a href="https://github.com/Stealth-J" class="btn btn-sm btn-outline-perfectblue"><i class="bi bi-github"></i></a>
-                <a href="https://x.com/yameh_office" class="btn btn-sm btn-outline-perfectblue"><i class="bi bi-twitter"></i></a>
+            <div class="d-flex gap-2 mb-2 flex-wrap">
+                <a href="https://github.com/Stealth-J" class="btn btn-sm btn-outline-perfectblue" target = "_blank"><i class="bi bi-github"></i></a>
+                <a href="https://x.com/yameh_office" class="btn btn-sm btn-outline-perfectblue" target="_blank"><i class="bi bi-twitter"></i></a>
+                <a href="{% url "help" %}" class="btn btn-sm btn-outline-perfectblue" title="help"><i class="bi bi-question-lg"></i></a>
             </div>
             <div class="d-flex align-items-center gap-2 mt-3">
                 <img src="{% static "img/slipsync_brand.png" %}" alt="Logo" width="24" height="24" class="rounded"/>
