@@ -135,9 +135,9 @@
                                             <span class="pick">{{ game.pick }}</span>
                                         </div>
                                         <div class="pick-line">
-                                            <span class="teams fst-italic ">{{ game.home_team|dont_return_none }} - {{ game.away_team|dont_return_none }}</span>
-                                            <span class="market">{{ game.market_type }}</span>
+                                            <span class="teams "><i class="bi bi-flag me-2"></i>{{ game.home_team|dont_return_none }} - {{ game.away_team|dont_return_none }}</span>
                                         </div>
+                                        <span class="market"><i class="bi bi-tag me-2"></i>{{ game.market_type }}</span>
                                     </div>
                                     <div class="odds">{{ game.odds }}</div>
                                 </div>
@@ -147,8 +147,8 @@
                                 <details class="game-details">
                                     <summary class="fw-light">More info</summary>
                                     <div class="extra-info">
-                                        <div>{{ game.start_time }}</div>
-                                        <div>{{ game.league }}</div>
+                                        <div><i class="bi bi-clock me-2 mt-1"></i> {{ game.start_time }}</div>
+                                        <div><i class="bi bi-trophy me-2"></i> {{ game.league }}</div>
                                         {{ game.status }}
                                     </div>
                                 </details>
@@ -191,17 +191,21 @@
 
         let skeletonTimeout = null;
         const skeleton = document.getElementById('skeleton-loader');
-
+        
         document.body.addEventListener('htmx:beforeRequest', function () {
+            const slipContent = document.getElementById('betslip_content');
             
             skeletonTimeout = setTimeout(() => {
-            skeleton.style.display = 'block';
+                skeleton.style.display = 'block'
+                slipContent.style.display = 'none';
             }, 400); 
         });
 
         document.body.addEventListener('htmx:afterRequest', function () {
+            const newslipContent = document.getElementById('betslip_content')
             clearTimeout(skeletonTimeout);
             skeleton.style.display = 'none';
+            newslipContent.style.display = 'block'
         });
 
 

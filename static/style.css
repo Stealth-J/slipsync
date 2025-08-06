@@ -120,6 +120,13 @@ h1 {
   color: var(--color-font-main) !important;
 }
 
+.nav-link:focus {
+  color: var(--color-font-main) !important;
+  outline: none;
+  box-shadow: none;
+  background-color: var(--color-nav-item-hover);
+}
+
 .dropdown-menu{
   background: var(--color-bg-secondary);
   padding: 10px;
@@ -221,6 +228,7 @@ h1 {
       align-self: flex-end;
     }
 
+
 }
 
 
@@ -273,11 +281,11 @@ h1 {
 }
 
 
-#showExcluded:focus{
+#showExcluded:focus, #extraInfo:focus {
   box-shadow: none;
 }
 
-#showExcluded:checked{
+#showExcluded:checked, #extraInfo:checked{
   background-color: var(--color-checked);
   border: none;
 }
@@ -376,6 +384,7 @@ h1 {
     font-family: 'Inter', sans-serif;
     }
 
+
     .game-main {
     display: flex;
     justify-content: space-between;
@@ -402,23 +411,28 @@ h1 {
     }
 
     .pick-line {
-      font-size: 0.9rem;
-      color: var(--color-text-muted);
+      font-size: 0.95rem;
+      color: var(--color-font-main);
       display: flex;
       gap: 0.75rem;
       flex-wrap: wrap;
+      margin-top: 0.5rem;
     }
 
     .teams {
-      font-weight: 500;
+      font-family: "Quicksand", sans-serif;
+      font-optical-sizing: auto;
     }
-
+    
     .pick {
       font-weight: 500;
     }
-
+    
     .market {
-      font-style: italic;
+      font-family: "Quicksand", sans-serif;
+      font-optical-sizing: auto;
+      color: var(--color-font-main); 
+      font-size: 0.85rem;
     }
 
     .odds {
@@ -461,10 +475,10 @@ h1 {
     }
 
     .extra-info {
-      font-size: 0.85rem;
+      font-size: 0.8rem;
       color: var(--color-text-muted);
       margin-top: 0.25rem;
-      padding-left: 1rem;
+      /* padding-left: 1rem; */
     }
 
 

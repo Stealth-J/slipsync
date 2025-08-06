@@ -1,9 +1,39 @@
 from datetime import datetime, timezone
+from functools import wraps
+import time
 
 sites_urls = {
     'Bet9ja': "https://coupon.bet9ja.com/desktop/feapi/CouponAjax/GetBookABetCoupon?couponCode={}&v_cache_version=1.279.0.198",
     'SportyBet': "https://www.sportybet.com/api/ng/orders/share/{}?_t={}"
 }
+
+
+def timeit(label = None):    # so we can put arguments in the decorator
+    def decorator(func):
+        @wraps(func)
+        def wrapper(*args, **kwargs):
+            start = time.time()
+            result = func(*args, **kwargs)
+            duration = time.time() - start
+            tag = label or func.__name__
+            print(f"[{tag}] took {duration:.2f} seconds")
+
+            return result
+        return wrapper
+    return decorator
+
+
+def handle_parsing_errors(func):
+    def wrapper(*args, **kwargs):
+        try:
+            return func(*args, **kwargs)
+        
+        except Exception as e:
+            raise Exception(f'[{func.__name__}] Unexpected error: {e}')
+        
+    return wrapper
+
+
 
 def format_time(time_data, ms = True):
     ms_time = time_data
@@ -36,30 +66,23 @@ def get_timestamp(platform, time_raw = None):
 
     return timestamp
 
-list = ['over', 'under']
-pick_interpretations = {
-    '1X2': {
-        '1': 'Home',
-        '2': 'Away',
-        'X': 'Draw',
-    },
-    'Over \/ Under': {
-        
-    }
-}
 
-def parse_overs_and_unders(pick, rest):
-    try:
-        for item in list:
-            if item in pick.lower():
-                _, num_str = rest.split('@')
-                num = num_str.split('_')[0]
-                pick = pick + f' {num}'
 
-    except Exception as e:
-        raise e
+def clean_b9_key(key):
+    key = key.removeprefix('M#').removesuffix('.NAME')
+    return key
+
+
+def clean_b9_pick(string, b9_prefix):
+    return string.replace(b9_prefix, '')
+
+
+def prepare_for_parsing(pick, market_obj, teams):
+    home, away = teams
+    if market_obj.sporty_id in ['819', '820']:
+        pick = pick.replace(home, '{Home}').replace(away, '{Away}')
+
     
     return pick
 
-# def translate_(home, away, pick):
-#     if 'double chance' in pick.lower():
+

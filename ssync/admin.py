@@ -3,3 +3,5 @@ from .models import *
 
 # Register your models here.
 admin.site.register(Market)
+admin.site.register(MarketParser)
+admin.site.register(Outcome)

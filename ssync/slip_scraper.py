@@ -1,11 +1,12 @@
 import requests
 from datetime import datetime, timezone
+from .models import *
 from urllib.parse import urlparse
 import json
-from .helpers import format_time, get_timestamp
+from .helpers import *
 from types import SimpleNamespace
 from .context_processors import *
-from .helpers import parse_overs_and_unders
+from .market_parser import parse_1x2
 
 
 SLIP_DOMAINS = {
@@ -50,7 +51,6 @@ def validate_url(url, platform):
 
 
 def scrape_site(url, platform):
-    print(url)
     headers = HEADERS.get(platform)
     if not headers:
         return (False, f"Unknown platform '{platform}'")
@@ -60,7 +60,7 @@ def scrape_site(url, platform):
         return (success, text)
     
     try:
-        response = requests.get(url, headers = headers)
+        response = requests.get(url, headers = headers, timeout = 15)
         print("Fetch time:", response.elapsed.total_seconds())
 
         response.raise_for_status()
@@ -69,11 +69,15 @@ def scrape_site(url, platform):
     except Exception as e:
         return (False, f'Failed to fetch slip data: {str(e)}')
 
+
+@timeit(label='Parsing and identifying sporty markets')
 def parse_sporty(data):
     selections = []
+    markets_all = list(Market.objects.all())
 
     for outcome in data.get("data", {}).get("outcomes", []):
         try:
+            market_obj = None
 
             home = outcome.get("homeTeamName")
             away = outcome.get("awayTeamName")
@@ -84,10 +88,28 @@ def parse_sporty(data):
             status = outcome.get("matchStatus", 'none')
             status_class = game_status.get(status.lower(), 'unknown')
 
-            market_data = outcome.get("markets", [])[0] if outcome.get("markets") else {}
+            market_data = outcome.get("markets")
+            market_data = market_data[0] if market_data else {}
             market = market_data.get("desc")
-            pick_data = market_data.get("outcomes", [])[0] if market_data.get("outcomes") else {}
+            
+            market_id =  market_data.get('id', '')
+            for obj in markets_all:
+                if obj.sporty_id == market_id:
+                    market_obj = obj
+                    break
+                
+            if market_obj:
+                print(market_obj.name)
+                supported =  True
+            else:
+                print('Not supported', market)
+                supported = False
+                continue
+
+            pick_data = market_data.get("outcomes")
+            pick_data = pick_data[0] if pick_data else {}
             pick = pick_data.get("desc")
+            pick = pick.lower()
             odds = pick_data.get("odds" )
 
             try:
@@ -101,19 +123,26 @@ def parse_sporty(data):
             print(str(e))
             continue
         
-        selections.append(SimpleNamespace(home_team = home, away_team = away, league = tournament, start_time = start_time, status = status, market_type = market, pick = pick, odds = odds, error = error, status_class = status_class))
+        selections.append(SimpleNamespace(home_team = home, away_team = away, league = tournament, start_time = start_time, status = status, market_type = market, pick = pick, odds = odds, error = error, status_class = status_class, supported = supported))
 
     return selections
 
+@timeit(label='Parsing and identifying bet9ja markets')
 def parse_b9(data):
+    markets_all = list(Market.objects.all())
     selections = []
 
     events = data.get("D", {}).get("O", {})
     trans = data.get("D", {}).get("TRANS", {})
-# 37N9JTV 
+ 
     for key, val in events.items():
-        game_id, rest = key.split('$S_')
-        print(key)
+        # Ensure only "$S_"
+        if '$S_' not in key:
+            continue
+
+        market_obj = None
+        game_id, rest = key.split('$')
+        print(key, val)
         
         e_name = val.get("E_NAME", "")
         home, away = e_name.split(" - ") if " - " in e_name else (e_name, None)
@@ -127,7 +156,35 @@ def parse_b9(data):
 
         market = val.get("M_NAME")
         pick = val.get('SGN', '')
-        pick = parse_overs_and_unders(pick, rest)
+
+        market_key = val.get('marketNameTransKey')
+        market_id = clean_b9_key(market_key)
+        for obj in markets_all:
+            if obj.b9_id:
+                if obj.b9_id == market_id:
+                    market_obj = obj
+                    break
+
+        if market_obj:
+            pick_txt = clean_b9_pick(rest, market_obj.b9_prefix)
+            parser_obj = market_obj.parser_data.all().first()
+            if parser_obj:
+                func_, dict_ = parser_obj.get_parser(), parser_obj.get_dict()
+
+                if callable(func_):
+                    sporty_equ = func_('bet9ja', pick_txt, market_obj, dict_)
+
+            else:
+                sporty_equ = ''
+                print(f'No parsing function developed')
+
+            print(sporty_equ)
+            # print(rest)
+            supported = True
+        else:
+            print('Not supported:', market)
+            supported = False
+            continue
 
         odds = val.get("V", 0)
 
@@ -138,7 +195,7 @@ def parse_b9(data):
             odds = 0
             error = str(e)
 
-        selections.append(SimpleNamespace(home_team = home, away_team = away, league = tournament, start_time = start_time, status = status, market_type = market, pick = pick, odds = odds, error = error, status_class = status_class))
+        selections.append(SimpleNamespace(home_team = home, away_team = away, league = tournament, start_time = start_time, status = status, market_type = market, pick = pick, odds = odds, error = error, status_class = status_class, supported = supported))
 
     return selections
 
@@ -163,4 +220,4 @@ def parse_slip(url, platform):
     if not selections:
         return (False, f'Failed to parse slip data. Check if the right platform is chosen')
 
-    return (True, selections)
+    return (True, selections) 

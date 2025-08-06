@@ -27,5 +27,5 @@ media/
 .migrations/
 
 # ignore folder
-stes_json/
+sites_json/
 test/

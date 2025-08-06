@@ -26,6 +26,7 @@ def convert(request, platform):
     if request.method == 'POST':
         slip_code = request.POST.get('slip_code')
         site = request.POST.get('site')
+        logo = logos.get(site.lower())
 
         url = get_url(slip_code, site)
 
