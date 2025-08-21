@@ -1,20 +1,15 @@
 import re
-from .helpers import handle_parsing_errors
 
 
-dict_1x2 = {
-    '1': 'Home',
-    'X': 'Draw',
-    '2': 'Away',
-    '1X': 'Home or Draw',
-    '12': 'Home or Away',        
-    'X2': 'Draw or Away',
-}
-
-
-
-
-
+def handle_parsing_errors(func):
+    def wrapper(*args, **kwargs):
+        try:
+            return func(*args, **kwargs)
+        
+        except Exception as e:
+            raise Exception(f'[{func.__name__}] Unexpected error: {e}')
+        
+    return wrapper
 
 # B9
 
@@ -23,7 +18,7 @@ b9_dict_1x2 = {
     'draw': 'X',
     'away': '2',
     'home or draw': '1X', 
-    'home or away': '12',          # lower case
+    'home or away': '12',         
     'draw or away': 'X2', 
 }
 b9_dict_1x2_1up = {
@@ -314,10 +309,11 @@ b9_dict_first_goal_1x2 = {
 }
 
 
+
 def create_b9_key(sign, market_obj):
     if sign:
         return f'{market_obj.b9_prefix}{sign}'
-    return None
+    return
 
 def extract_ou_from_sporty(text):
     regex_ = r'(?:over|under)\s(\d+(?:\.\d+)?)'
@@ -349,7 +345,7 @@ def split_sporty_multi_score(text):
 
 
 @handle_parsing_errors
-def b9_parse_1x2(platform, pick_txt, market_obj, dict_ = None):
+def b9_parse_1x2(pick_txt, market_obj, dict_ = None):
     sign = dict_.get(pick_txt)
     if sign:
         b9_key = create_b9_key(sign, market_obj)
@@ -359,7 +355,7 @@ def b9_parse_1x2(platform, pick_txt, market_obj, dict_ = None):
 
 
 @handle_parsing_errors
-def b9_parse_handicap(platform, pick_txt, market_obj, dict_ = None):
+def b9_parse_handicap(pick_txt, market_obj, dict_ = None):
     pick, hcp = split_handicap(pick_txt)
     pick = dict_.get(pick)
     if pick:
@@ -371,7 +367,7 @@ def b9_parse_handicap(platform, pick_txt, market_obj, dict_ = None):
 
 
 @handle_parsing_errors
-def b9_parse_asian_handicap(platform, pick_txt, market_obj, dict_ = None):
+def b9_parse_asian_handicap(pick_txt, market_obj, dict_ = None):
     pick, hcp = split_asian_handicap(pick_txt)
     pick = dict_.get(pick)
     if pick:
@@ -383,7 +379,7 @@ def b9_parse_asian_handicap(platform, pick_txt, market_obj, dict_ = None):
 
 
 @handle_parsing_errors
-def b9_parse_over_under(platform, pick_txt, market_obj, dict_ = None):
+def b9_parse_over_under(pick_txt, market_obj, dict_ = None):
     o_u, num = pick_txt.strip().split(' ')
     pick = dict_.get(o_u)
     if pick:
@@ -395,14 +391,14 @@ def b9_parse_over_under(platform, pick_txt, market_obj, dict_ = None):
 
 
 @handle_parsing_errors
-def b9_parse_correct_score(platform, pick_txt, market_obj, dict_ = None):
+def b9_parse_correct_score(pick_txt, market_obj, dict_ = None):
     sign = dict_.get(pick_txt, pick_txt)
     b9_key = create_b9_key(sign, market_obj)
     return b9_key
 
 
 @handle_parsing_errors
-def b9_parse_htft_cs(platform, pick_txt, market_obj, dict_ = None):
+def b9_parse_htft_cs(pick_txt, market_obj, dict_ = None):
     htft_tuple = pick_txt.split(' ')
     hts, fts = map(convert_score_to_b9_format, htft_tuple)
     sign = f'{hts}/{fts}'
@@ -411,13 +407,13 @@ def b9_parse_htft_cs(platform, pick_txt, market_obj, dict_ = None):
 
 
 @handle_parsing_errors
-def b9_parse_exact_gcb(platform, pick_txt, market_obj, dict_ = None):
+def b9_parse_exact_gcb(pick_txt, market_obj, dict_ = None):
     b9_key = create_b9_key(pick_txt, market_obj)
     return b9_key
 
 
 @handle_parsing_errors
-def b9_parse_htft_1x2(platform, pick_txt, market_obj, dict_ = None):
+def b9_parse_htft_1x2(pick_txt, market_obj, dict_ = None):
     htft_tuple = pick_txt.split('/')
     ht, ft = map(dict.get, htft_tuple)
     if ht and ft:
@@ -429,7 +425,7 @@ def b9_parse_htft_1x2(platform, pick_txt, market_obj, dict_ = None):
 
 
 @handle_parsing_errors
-def b9_parse_over_combinations(platform, pick_txt, market_obj, dict_ = None):
+def b9_parse_over_combinations(pick_txt, market_obj, dict_ = None):
     o_u = extract_ou_from_sporty(pick_txt)
     pick = pick_txt.replace(o_u, '|||')
     pick = dict_.get(pick)
@@ -442,7 +438,7 @@ def b9_parse_over_combinations(platform, pick_txt, market_obj, dict_ = None):
 
 
 @handle_parsing_errors    
-def b9_parse_multi_score(platform, pick_txt, market_obj, dict_ = None):
+def b9_parse_multi_score(pick_txt, market_obj, dict_ = None):
     scores = split_sporty_multi_score(pick_txt)
     if len(scores) > 1:
         scores = [ score.replace(':', '') for score in scores ]
@@ -460,11 +456,14 @@ def b9_parse_multi_score(platform, pick_txt, market_obj, dict_ = None):
 
 
 
-
-
-
-
-
+dict_1x2 = {
+    '1': 'Home',
+    'X': 'Draw',
+    '2': 'Away',
+    '1X': 'Home or Draw',
+    '12': 'Home or Away',        
+    'X2': 'Draw or Away',
+}
 
 dict_over_and_under = {
     'O': 'Over',
@@ -801,9 +800,14 @@ def break_o_u_into_smaller_elements(pick_txt):
 
 def get_pick_obj(pick, market_obj):
     outcomes = market_obj.outcomes.all()
-    pick_obj = outcomes.filter(desc__iexact = pick).first()
+    pick_obj = None
+    for outcome in outcomes:
+        if outcome.desc.lower() == pick.lower():
+            pick_obj = outcome
+            break
+
     if pick_obj:
-        return f'Market_id: {market_obj.sporty_id}, Specifier: {market_obj.specifier or ''}, Pick id: {pick_obj.outcome_id}, Pick: {pick}'
+        return market_obj.sporty_id, market_obj.specifier, pick_obj.outcome_id
     
     return None
 
@@ -814,7 +818,7 @@ def get_pick_obj(pick, market_obj):
 # PARSING FUNCTIONS
 
 @handle_parsing_errors
-def parse_1x2(platform, pick_txt, market_obj, dict_ = None):
+def parse_1x2(pick_txt, market_obj, dict_ = None):
     if dict_ is None:
         dict_ = dict_1x2
 
@@ -824,11 +828,8 @@ def parse_1x2(platform, pick_txt, market_obj, dict_ = None):
     return pick_obj
 
 
-    
-
-
 @handle_parsing_errors
-def parse_1x2_up(platform, pick_txt, market_obj, dict_ = None):
+def parse_1x2_up(pick_txt, market_obj, dict_ = None):
     pick_txt = pick_txt[:-1]
     pick = dict_.get(pick_txt)
     pick_obj = get_pick_obj(pick, market_obj)
@@ -836,16 +837,15 @@ def parse_1x2_up(platform, pick_txt, market_obj, dict_ = None):
 
 
 @handle_parsing_errors
-def parse_over_and_under(platform, pick_txt, market_obj, dict_ = None):
+def parse_over_and_under(pick_txt, market_obj, dict_ = None):
     o_u, pick = break_o_u_into_smaller_elements(pick_txt)
     pick_txt = f'{pick} {o_u}'
-    pick_obj = get_pick_obj(pick, market_obj)
-
+    pick_obj = get_pick_obj(pick_txt, market_obj)
     return pick_obj
 
 
 @handle_parsing_errors
-def parse_handicap(platform, pick_txt, market_obj, dict_ = None):
+def parse_handicap(pick_txt, market_obj, dict_ = None):
     hcp, pick = break_hcp_into_smaller_elements(pick_txt)
     score = convert_handicap_to_score(hcp)
     
@@ -856,7 +856,7 @@ def parse_handicap(platform, pick_txt, market_obj, dict_ = None):
 
 
 @handle_parsing_errors
-def parse_asian_handicap(platform, pick_txt, market_obj, dict_ = None):
+def parse_asian_handicap(pick_txt, market_obj, dict_ = None):
     hcp, pick = break_hcp_into_smaller_elements(pick_txt)
     hcp_num = convert_handicap_to_numbers(hcp)
 
@@ -867,7 +867,7 @@ def parse_asian_handicap(platform, pick_txt, market_obj, dict_ = None):
 
 
 @handle_parsing_errors
-def parse_correct_score(platform, pick_txt, market_obj, dict_ = None):
+def parse_correct_score(pick_txt, market_obj, dict_ = None):
     pick_txt = dict_.get(pick_txt, pick_txt)
 
     htft_tuple = split_ht_ft(pick_txt)
@@ -880,13 +880,13 @@ def parse_correct_score(platform, pick_txt, market_obj, dict_ = None):
 
 
 @handle_parsing_errors
-def parse_exact_gcb(platform, pick_txt, market_obj, dict_ = None):
+def parse_exact_gcb(pick_txt, market_obj, dict_ = None):
     pick_obj = get_pick_obj(pick_txt, market_obj)
     return pick_obj
 
 
 @handle_parsing_errors
-def parse_ht_ft_1x2(platform, pick_txt, market_obj, dict_ = None):
+def parse_ht_ft_1x2(pick_txt, market_obj, dict_ = None):
     htft_tuple = split_ht_ft(pick_txt)
     if htft_tuple:
         ht, ft = map(dict_.get, htft_tuple)
@@ -897,7 +897,7 @@ def parse_ht_ft_1x2(platform, pick_txt, market_obj, dict_ = None):
 
 
 @handle_parsing_errors
-def parse_over_combinations(platform, pick_txt, market_obj, dict_ = None):
+def parse_over_combinations(pick_txt, market_obj, dict_ = None):
     ou, pick = pick_txt.split('_')
     pick_txt = dict_.get(pick)
     pick_txt = pick_txt.replace('|||', ou)
@@ -906,14 +906,14 @@ def parse_over_combinations(platform, pick_txt, market_obj, dict_ = None):
 
 
 @handle_parsing_errors
-def parse_multi_score(platform, pick_txt, market_obj, dict_ = None):
+def parse_multi_score(pick_txt, market_obj, dict_ = None):
     pick_txt = format_multiple_scores(pick_txt)
     pick_obj = get_pick_obj(pick_txt, market_obj)
     return pick_obj
 
 
 @handle_parsing_errors
-def parse_ht_ft_ou(platform, pick_txt, market_obj, dict_ = None):
+def parse_ht_ft_ou(pick_txt, market_obj, dict_ = None):
     ou, pick = pick_txt.split('_')
     pick_txt = pick.replace('/', '')
     pick_txt = dict_.get(pick_txt)
@@ -947,6 +947,49 @@ DICTIONARIES = {
     'dict_most_half': dict_most_half,
     'dict_winmargin': dict_winmargin,
     'dict_first_goal_1x2': dict_first_goal_1x2,
+
+    'b9_dict_1x2': b9_dict_1x2,
+    'b9_dict_1x2_1up': b9_dict_1x2_1up,
+    'b9_dict_1x2_2up': b9_dict_1x2_2up,
+    'b9_dict_home_none_away': b9_dict_home_none_away,
+    'b9_dict_home_none_away_lastscore': b9_dict_home_none_away_lastscore,
+    'b9_dict_handicap': b9_dict_handicap,
+    'b9_dict_ou': b9_dict_ou,
+    'b9_dict_home_ou': b9_dict_home_ou,
+    'b9_dict_away_ou': b9_dict_away_ou,
+    'b9_dict_half_home_ou': b9_dict_half_home_ou,
+    'b9_dict_half_away_ou': b9_dict_half_away_ou,
+    'b9_dict_corner_home_ou': b9_dict_corner_home_ou,
+    'b9_dict_corner_away_ou': b9_dict_corner_away_ou,
+    'b9_dict_yes_no': b9_dict_yes_no,
+    'b9_dict_yes_no_ggng': b9_dict_yes_no_ggng,
+    'b9_dict_odd_even': b9_dict_odd_even,
+    'b9_dict_odd_even_short': b9_dict_odd_even_short,
+    'b9_dict_cs': b9_dict_cs,
+    'b9_dict_multi': b9_dict_multi,
+    'b9_dict_home_multi': b9_dict_home_multi,
+    'b9_dict_away_multi': b9_dict_away_multi,
+    'b9_dict_half_multi': b9_dict_half_multi,
+    'b9_dict_multi_corner': b9_dict_multi_corner,
+    'b9_dict_both_only_none': b9_dict_both_only_none,
+    'b9_dict_dc_gg': b9_dict_dc_gg,
+    'b9_dict_dc_gg_h': b9_dict_dc_gg_h,
+    'b9_dict_dc_gg_hh': b9_dict_dc_gg_hh,
+    'b9_dict_1x2_gg': b9_dict_1x2_gg,
+    'b9_dict_1x2_gg_h': b9_dict_1x2_gg_h,
+    'b9_dict_1x2_gg_hh': b9_dict_1x2_gg_hh,
+    'b9_dict_gg_over': b9_dict_gg_over,
+    'b9_dict_gg_over_long': b9_dict_gg_over_long,
+    'b9_dict_1x2_over': b9_dict_1x2_over,
+    'b9_dict_1x2_over_h': b9_dict_1x2_over_h,
+    'b9_dict_1x2_over_hh': b9_dict_1x2_over_hh,
+    'b9_dict_dc_over': b9_dict_dc_over,
+    'b9_dict_winmargin': b9_dict_winmargin,
+    'b9_dict_ht_ft_ou': b9_dict_ht_ft_ou,
+    'b9_dict_ht_ft_ou_h': b9_dict_ht_ft_ou_h,
+    'b9_dict_most_half': b9_dict_most_half,
+    'b9_dict_first_goal_1x2': b9_dict_first_goal_1x2,
+
 }
 
 PARSER_FUNCTIONS = {
@@ -961,4 +1004,15 @@ PARSER_FUNCTIONS = {
     'parse_over_combinations': parse_over_combinations,
     'parse_multi_score': parse_multi_score,
     'parse_ht_ft_ou': parse_ht_ft_ou,
+
+    'b9_parse_1x2': b9_parse_1x2,
+    'b9_parse_handicap': b9_parse_handicap,
+    'b9_parse_asian_handicap': b9_parse_asian_handicap,
+    'b9_parse_over_under': b9_parse_over_under,
+    'b9_parse_correct_score': b9_parse_correct_score,
+    'b9_parse_htft_cs': b9_parse_htft_cs,
+    'b9_parse_exact_gcb': b9_parse_exact_gcb,
+    'b9_parse_htft_1x2': b9_parse_htft_1x2,
+    'b9_parse_over_combinations': b9_parse_over_combinations,
+    'b9_parse_multi_score': b9_parse_multi_score,
 }

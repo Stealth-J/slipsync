@@ -53,6 +53,20 @@ class Outcome(models.Model):
         return f'{self.market.name} - {self.desc}'
 
 
+
+class Tournament(models.Model):
+    b9_id = models.CharField(max_length = 50, null = True, blank = True)
+    b9_name = models.CharField(max_length = 50, null = True, blank = True)
+    sporty_id = models.CharField(max_length = 50, null = True, blank = True)
+    sporty_name = models.CharField(max_length = 50, null = True, blank = True)
+
+    def __str__(self):
+        if self.sporty_name:
+            return self.sporty_name
+        
+        return self.b9_name
+
+
 # class Error(models.Model):
 #     text = models.CharField()
 #     type = models.CharField(max_length = 30)

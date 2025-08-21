@@ -6,7 +6,7 @@
 
 <div class="text-center p-2">
     <h2 class="page-header">Convert to {{ platform }} </h2>
-    <p class="text-quiet mb-4">Paste a valid game code from any supported platform and instantly convert it to {{ platform }} format. Live games are not supported</p>
+    <p class="text-quiet mb-4">Paste a valid game code from any supported platform and convert it to {{ platform }} format. Preview slip first before conversion </p>
 </div>
 
 
@@ -14,19 +14,39 @@
 <div class="container py-4">
   <!-- Row 1: Input Group -->
     <div class="input-card mb-3">
-        <form hx-post="{% url "convert" platform %}" hx-target = "#betslip_content" hx-indicator = "#skeleton-loader">
+        <form hx-post="{% url "convert" platform %}" hx-target = "#betslip_content" hx-indicator = "#skeleton-loader" id="slipCodeForm">
 
             <div class="row align-items-end">
                 <div class="col-10 col-md-7">
-                    <input type="text" class="form-control slip-link custom-input" placeholder="Enter slip link" name="slip_code" required> 
+
+                    <div class="input-group">
+                        <button type="button" title="Need help?" class="btn border-0 help-btn" data-bs-toggle="modal" data-bs-target="#helpModal"><i class="fas fa-question"></i></button>
+
+                        <input type="text" class="form-control slip-link custom-input" placeholder="Enter slip code" name="slip_code" required> 
+
+                        <button type="button" class="btn border-0 text-main chevron-btn" id="convertfromDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                             <i class="fas fa-chevron-down"></i>
+                        </button>
+
+                        <ul class="dropdown-menu" id="from_siteDropdown" aria-labelledby="convertfromDropdown">
+                            {% for site in sites %}
+                                <li><a class="dropdown-item" style="cursor: pointer;">{{site}}</a></li>
+                            {% endfor %}
+                        
+                        </ul>
+
+                        <input type="hidden" name="from_site" id="from_siteInput" required>
+                    </div>
                 </div>
-                <div class="col-10 col-md-5 ms-auto d-flex justify-content-end">
+
+                
+                <div class="col-10 col-md-5 d-flex ms-auto justify-content-end ">
                     <div class="d-flex btn-group-nav" style="gap: 0.5rem ;">
                         <button type="button" id="previousBtn" class="btn btn-sm btn-outline-perfectblue">&lt;</button>
 
                         <div style="width: 12ch; text-align: center;">
-                            <button type="button" id="bettingSite" class="btn btn-sm btn-outline-perfectblue px-4" style="pointer-events: none;" value="{{ platform }}">{{ platform }}</button>
-                            <input type="hidden" id="siteInput" name="site" value="{{ platform }}">
+                            <button type="button" id="bettingSite" class="btn btn-sm btn-outline-perfectblue px-4" style="pointer-events: none;" >{{ platform }}</button>
+                            <input type="hidden" id="to_siteInput" name="site" value="{{ platform }}">
                         </div>
 
                         <button type="button" id="nextBtn" class="btn btn-sm btn-outline-perfectblue">&gt;</button>
@@ -36,13 +56,24 @@
             
 
             <div class="text-end mt-3">
-                <button class="btn btn-sm btn-outline-perfectblue px-4" type="submit">Convert Slip</button>
+                <button class="btn btn-sm btn-outline-perfectblue px-4" type="submit">Preview Slip</button>
             </div>
         </form>
+
+        <div class="text-error p-3" id="errorContainer"></div>
 
 
     </div>
 
+    <div class="conversion-text mt-5">
+        <div class="text-center">
+            <h3 class="text-success"> 
+                <i id="from_siteText"></i>
+                <i class="bi bi-arrow-right"></i>
+                <i id="to_siteText">{{ platform }}</i>
+            </h3>
+        </div>
+    </div>
 
     
     <div id="betslip_wrapper">
@@ -102,30 +133,38 @@
                 
         </div>
         
-        <div class="result-card mt-5" id="betslip_content">
+        <div class="result-card mt-3" id="betslip_content">
 
-            
             {% block slip_data_container %}
                 {% if slip_data %}
-                
-                    <div class="result-header">
-                        <div class="d-flex align-items-center gap-3">
 
-                            <div class="result-site"><img src="{% static logo %}" height="30" alt=""></div>
-                            
-                            <a class="result-link " href="https://bet9ja.com/slip/ABC123">
-                                https://bet9ja.com/slip/ABC123
-                            </a>
+                    <div id="floating-submit"><button class="btn booking-btn" hx-post = "{% url "sync" %}" hx-target="#slipHeader" hx-vals='{"ids_list": "{{ ids_list }}", "slip_data": "{{ slip_data_raw }}" }' hx-indicator="#spinner" >Book</button></div>
+            
+                    <div class="result-header">
+                        <div class="result-link-meta result-meta" >
+                            <h5 class="selections-number text-success" title="valid / total selections">
+                                <span class="valid-selections">{{ valid_selections }}</span> / 
+                                <span class="total-selections">{{ games_no }}</span>
+                            </h5>
+
                         </div>
-                        <div class="result-link-meta result-meta">
-                            <h4 class="selections-number text-success" title="number of games">{{ games_no }}</h4>
+
+                        <div id="slipHeader">
+                        </div>
+                        
+                        <div class="custom-spinner text-spinner " id="spinner" role="status" style="display: none;">
+                            <span class="visually-hidden">Loading...</span>
                         </div>
                     </div>
 
+                    
+                    
                     <!-- Game List -->
                     <div class="game-list">
+                        
                         {% for game in slip_data %}
-                            <div class="game-card">
+
+                            <div class="game-card" id="selection{{ game.id_ }}">
                             
                                 <!-- Row -->
                                 <div class="game-main">
@@ -133,47 +172,95 @@
                                         <div class="game-line">
                                             <span class="status-dot {{ game.status_class }}"></span>
                                             <span class="pick">{{ game.pick }}</span>
+                                            
                                         </div>
                                         <div class="pick-line">
-                                            <span class="teams "><i class="bi bi-flag me-2"></i>{{ game.home_team|dont_return_none }} - {{ game.away_team|dont_return_none }}</span>
+                                            <span class="teams ">
+                                                <i class="bi bi-flag me-2"></i>{{ game.home_team|dont_return_none }} - {{ game.away_team|dont_return_none }}
+                                            </span>
                                         </div>
-                                        <span class="market"><i class="bi bi-tag me-2"></i>{{ game.market_type }}</span>
+                                        <span class="market">
+                                            <span class="me-2"><i class="bi bi-tag"></i>|</span> {{ game.market_type }} {% if not game.market_supported %} <i title="market type not supported" class="bi bi-ban ml-2"></i> {% endif %}
+                                        </span>
                                     </div>
-                                    <div class="odds">{{ game.odds }}</div>
+                                    {% if game.supported %}
+                                        <div class="odds valid">{{ game.odds }}</div>
+                                    {% else %}
+                                        <div class="odds" style="color: #ff2400;" title="invalid">{{ game.odds }}</div>
+                                    {% endif %}
+                                    {% comment %} <p class="text-main">{{ game }}</p> {% endcomment %}
                                 </div>
-
+                                
                                 <!-- Toggle-able Extra Info -->
                                 <hr class="text-quiet">
                                 <details class="game-details">
-                                    <summary class="fw-light">More info</summary>
+                                    <summary class="fw-light summary-flex">
+                                        <span>More info</span>
+
+                                        <button title="remove selection" class="close-btn" hx-post = "{% url "edit_slip" %}" hx-target="#selection{{ game.id_ }}" hx-swap="delete" hx-vals='{"ids_list": "{{ ids_list }}", "removed_": "{{ game.id_ }}" }'><i class="bi bi-x-lg"></i></button>
+                                    </summary>
+
                                     <div class="extra-info">
                                         <div><i class="bi bi-clock me-2 mt-1"></i> {{ game.start_time }}</div>
-                                        <div><i class="bi bi-trophy me-2"></i> {{ game.league }}</div>
+                                        <div><i class="bi bi-trophy me-2"></i> 
+                                            {% if game.tourney_ids %}
+                                                {{ game.league }}
+                                            {% else %}
+                                                <i class="text-decoration-line-through" title="Tournament not supported">{{ game.league }}</i>
+                                            {% endif %}
+                                        </div>
+
                                         {{ game.status }}
+                                        {% if game.expired %}
+                                            <i class="bi bi-hourglass-bottom"></i>
+                                        {% else %}
+                                            <i class="bi bi-hourglass-split"></i>
+                                        {% endif %}
+                                        
                                     </div>
                                 </details>
 
                             </div>
+                                
+                                
                         {% endfor %}
-
-
                             
                         <!-- Card Footer -->
                         <div class="result-footer text-end">
-                            <h4 title = "Estimated not definitive"> {{ total }}</h4>
+                            
+                        </div>
+                        
+                        <div class="d-flex align-items-center gap-3">
+                            <div class="result-site">
+                                <a href="{{ slip_link }}"class="link-main" target="_blank" >
+                                    <img src="{% static from_logo %}" height="20" alt="">
+                                </a>
+                            </div>
+                            <span class="text-success"><i class="bi bi-arrow-right"></i></span>
+
+                            <div class="result-site">
+                                <img src="{% static to_logo %}" height="20" alt="">
+                            </div>
+
                         </div>
 
                         <!-- Mobile Info Grouped Below -->
                         <div class="muted-info">
                             <div>{{ current_time }}</div>
-                            <div>https://bet9ja.com/slip/ABC123</div>
+                            <div><a class="link-main" target="_blank" href="{{ slip_link }}">Go to site</a></div>
                         </div>
+
+                        
                     </div>
 
+
                 {% endif %}
+
             {% endblock %}
             
         </div>
+
+
 
     </div>
     
@@ -182,39 +269,176 @@
 </div>
 
 
+
+
+
+
+
+
+<!-- Help Modal -->
+<div class="modal fade" id="helpModal" tabindex="-1" aria-labelledby="helpModalLabel" aria-hidden="true">
+	<div class="modal-dialog modal-dialog-centered modal-border">
+		<div class="modal-content bg-main text-main p-2" >
+			<div class="modal-header border-0">
+				<h4 class="modal-title fw-bold" id="helpModalLabel" >
+					<i class="bi bi-stickies me-2"></i> Conversion Guide
+				</h4>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+
+			</div>
+
+			<div class="modal-body" >
+				<p class="mt-2">
+					You can convert slips from supported platforms into Bet9ja format by pasting the original slip code and selecting the platform it came from.
+				</p>
+
+				<h6 class="fw-semibold mt-4"><i class="fa fa-ban me-1"></i> Live Games Are Not Supported</h6>
+				<p> 
+					Only pre-match games are currently supported. Live or in-play games will not be converted and may be silently excluded from the result.
+				</p>
+
+				<h6 class="fw-semibold mt-2"><i class="fa fa-ban me-1"></i> Unsupported Market Types</h6>
+				<p>
+					Player-specific bets (like goalscorer or assists) and outright markets (like tournament winners) are not supported for conversion.
+				</p>
+
+				<h6 class="fw-semibold mt-2"><i class="fa fa-ban me-1"></i> Preview Before You Book</h6>
+				<p>
+					After submitting a slip, use the <strong>Preview Slip</strong> option to see which games are eligible for conversion. Unsupported selections will be clearly marked.
+				</p>
+
+				<h6 class="fw-semibold mt-2"><i class="fa fa-ban me-1"></i> This Tool Is Not Perfect</h6>
+				<p>
+					This converter is experimental and may occasionally miss certain bet formats or markets. Always verify the final slip before booking.
+				</p>
+
+
+			</div>
+
+			<div class="modal-footer border-0 justify-content-center">
+				<button type="button" class="btn btn-outline-perfectblue px-4" data-bs-dismiss="modal">Close</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+
+
+
 {% endblock %}
 
 
 {% block script %}
 
     <script>
-
-        let skeletonTimeout = null;
-        const skeleton = document.getElementById('skeleton-loader');
         
-        document.body.addEventListener('htmx:beforeRequest', function () {
-            const slipContent = document.getElementById('betslip_content');
-            
-            skeletonTimeout = setTimeout(() => {
-                skeleton.style.display = 'block'
-                slipContent.style.display = 'none';
-            }, 400); 
-        });
-
-        document.body.addEventListener('htmx:afterRequest', function () {
-            const newslipContent = document.getElementById('betslip_content')
-            clearTimeout(skeletonTimeout);
-            skeleton.style.display = 'none';
-            newslipContent.style.display = 'block'
-        });
-
-
+        let skeletonTimeout = null;
+        
+        const skeleton = document.getElementById('skeleton-loader');
+        const slipCodeForm = document.getElementById('slipCodeForm')
         const previousBtn = document.getElementById('previousBtn')
+        const dropdown_items = document.getElementById('from_siteDropdown').querySelectorAll('a.dropdown-item')
         const nextBtn = document.getElementById('nextBtn')
         const bettingSite = document.getElementById('bettingSite')
         const sites = {{ sites|safe }}
-        const siteInput = document.getElementById('siteInput')
+        const from_siteInput = document.getElementById('from_siteInput')
+        const from_siteText = document.getElementById('from_siteText')
+        const to_siteInput = document.getElementById('to_siteInput')
+        const to_siteText = document.getElementById('to_siteText')
         const length_ = sites.length;
+
+        function validateSlipCodeForm(e) {
+            let errorContainer = document.getElementById('errorContainer')
+
+            if (!from_siteInput.value){
+                e.preventDefault()
+                errorContainer.textContent  = 'Please pick a site to convert from'
+                return false
+            } else if (from_siteInput.value === to_siteInput.value) {
+                e.preventDefault()
+                errorContainer.textContent  = 'You cannot sync to the same platform. Sorry' 
+                return false   
+            } else {
+                errorContainer.textContent = ""
+                return true
+            }
+            
+        }
+        
+        document.body.addEventListener('htmx:beforeRequest', function (e) {
+            const slipContent = document.getElementById('betslip_content');
+
+            if (e.target.closest('#slipCodeForm')){
+                if (validateSlipCodeForm(e)) {
+                    skeletonTimeout = setTimeout(() => {
+                        skeleton.style.display = 'block'
+                        slipContent.style.display = 'none';
+                    }, 400); 
+                }
+            } 
+            else if (e.target.closest('#floating-submit')){
+                skeletonTimeout = setTimeout(() => {
+                    document.getElementById('spinner').style.display = 'block'
+                    document.getElementById('slipHeader').style.display = 'none';
+                }, 200); 
+            }
+        });
+
+        document.body.addEventListener('htmx:afterRequest', function (e) {
+            const newslipContent = document.getElementById('betslip_content')
+
+            if (e.target.closest('#slipCodeForm')){
+                clearTimeout(skeletonTimeout);
+                skeleton.style.display = 'none';
+                newslipContent.style.display = 'block'
+            } 
+            else if (e.target.closest('#floating-submit')){
+                clearTimeout(skeletonTimeout)
+                document.getElementById('spinner').style.display = 'none'
+                document.getElementById('slipHeader').style.display = 'block';
+            }
+        });
+
+
+        document.body.addEventListener('edited_list', function(e){
+            let bookBtn = document.querySelector('.booking-btn')
+            let bookingVals = bookBtn.getAttribute('hx-vals')
+            let bookingParsed = {}
+            bookingParsed = JSON.parse(bookingVals)
+            let slip_data = bookingParsed['slip_data']
+            bookingParsed['ids_list'] = JSON.stringify(e.detail.value)
+            bookingParsed['slip_data'] = slip_data
+            bookBtn.setAttribute("hx-vals", JSON.stringify(bookingParsed))
+            
+            let closeBtns = document.querySelectorAll('.close-btn')
+            closeBtns.forEach((closeBtn) => {
+                let hxVals = closeBtn.getAttribute("hx-vals");
+                let parsed = {};
+
+                parsed = JSON.parse(hxVals)
+                let removed = parsed["removed_"] ;
+                parsed["ids_list"] = JSON.stringify(e.detail.value)
+                parsed["removed_"] = removed;
+                closeBtn.setAttribute("hx-vals", JSON.stringify(parsed));
+
+            })
+        })
+
+        document.body.addEventListener('htmx:afterOnLoad', () => {
+            let total_games = document.querySelectorAll('div.odds').length;
+            let valid_games = document.querySelectorAll('div.odds.valid').length;
+
+            let valid_span = document.querySelector('span.valid-selections');
+            let total_span = document.querySelector('span.total-selections');
+
+            if (valid_span && total_span) {  
+                valid_span.textContent = valid_games;
+                total_span.textContent = total_games;
+            }
+        });
+
+
+
 
         function toggleBetSite(direction) {
             let site = bettingSite.textContent
@@ -230,10 +454,21 @@
                 nextIndex = (index_ + 1 ) % length_;
             }
             
-            // console.log(index_, direction)
             bettingSite.textContent = sites[nextIndex]
-            siteInput.value = sites[nextIndex]
+            to_siteInput.value = sites[nextIndex]
+
+            to_siteText.textContent = sites[nextIndex]
         }
+
+        function applyActiveClass(active_item) {
+            active_item.classList.add('active')
+            dropdown_items.forEach((item) => {
+                if (item != active_item) {
+                    item.classList.remove('active')
+                }
+            })
+        }
+        
 
         previousBtn.addEventListener('click', () => {
             toggleBetSite('previous')
@@ -242,6 +477,17 @@
         nextBtn.addEventListener('click', () => {
             toggleBetSite('next')
         })
+from_siteInput.value = 'Bet9ja'
+
+        dropdown_items.forEach((item) => {
+            item.addEventListener('click', () => {
+                from_siteText.textContent = item.textContent
+                from_siteInput.value = item.textContent
+                applyActiveClass(item)
+            })
+        })
+
+
 
     </script>
 

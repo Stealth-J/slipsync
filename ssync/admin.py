@@ -5,3 +5,4 @@ from .models import *
 admin.site.register(Market)
 admin.site.register(MarketParser)
 admin.site.register(Outcome)
+admin.site.register(Tournament)

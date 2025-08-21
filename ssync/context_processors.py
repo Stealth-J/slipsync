@@ -4,6 +4,13 @@ sites_in_lower = [site.lower() for site in SUPPORTED_SITES]
 logos = {
     'sportybet': 'img/sporty_logo.png',
     'bet9ja': 'img/b9_logo.png',
+    'betking': 'img/betking.png',
+    'nairabet': 'img/nairabet.png',
+}
+
+code_links = {
+    'sportybet': 'https://www.sportybet.com/?shareCode={}=ng',
+    'bet9ja': 'https://sports.bet9ja.com/?bookABetCode={}',
 }
 
 game_status = {
@@ -14,7 +21,10 @@ game_status = {
     'h1': 'live',
     'h2': 'live',
     'ht': 'live',
+    'live': 'live',
     'aet': 'finished',
+    'ap': 'finished',
+    'suspended': 'finished',
 }
 
 

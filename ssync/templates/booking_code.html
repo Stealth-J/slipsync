@@ -1,0 +1,48 @@
+<div class="text-main" >
+
+    {% if booking_code %}
+        <span id="booking-code" > 
+            {{ booking_code }} 
+        </span>
+
+        <button class="btn border-0 help-btn copy-btn" 
+        data-bs-toggle="popover" 
+        data-bs-placement="top" 
+        data-bs-trigger="manual" 
+        data-bs-content="Copied!" onclick = "copyCode()">
+            <i class="bi bi-copy"></i>
+        </button>
+    
+    {% else %}
+        <button class="btn border-0 help-btn copy-btn" 
+        data-bs-toggle="popover" 
+        data-bs-placement="top" 
+        data-bs-trigger="manual" 
+        data-bs-content="{{ error }}" onclick = "show_popover()">
+            <i class="bi bi-patch-exclamation text-error"></i>
+        </button>
+    {% endif %}
+</div>
+
+
+
+
+<script>
+    var copyBtn = document.querySelector('.copy-btn');
+    var popover = new bootstrap.Popover(copyBtn);
+
+    function show_popover() {
+        popover.show();
+        setTimeout(() => {
+            popover.hide();
+        }, 2500);
+    }
+
+    function copyCode() {
+        var code = document.getElementById("booking-code").innerText.trim();
+        navigator.clipboard.writeText(code);
+
+        show_popover()
+    }
+
+</script>

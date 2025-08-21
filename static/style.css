@@ -10,7 +10,9 @@ body {
   --color-text-muted: #6c757d;
   --color-checked: #2424bc;
   --color-skeleton-loader: linear-gradient(90deg, #eee 25%, #ddd 37%, #eee 63%);
-
+  --modal-close-btn: none;
+  --color-perfectblue-muted: #9d9de0;
+  --color-spinner: rgba(33, 37, 41, 1);
 }
 
 body.dark {
@@ -25,6 +27,9 @@ body.dark {
   --color-text-muted: #a0a0a0;            
   --color-checked: #000000;
   --color-skeleton-loader: linear-gradient(90deg, #333 25%, #444 37%, #333 63%);
+  --modal-close-btn: invert(1) grayscale(100%) brightness(200%);
+  --color-perfectblue-muted: #a0a0a0;
+  --color-spinner: rgba(248, 249, 250, 1) ;
 }
 
 
@@ -52,6 +57,45 @@ body {
   color: var(--color-text-muted);
 }
 
+.link-main{
+  color: var(--color-perfectblue);
+  text-decoration: none;
+}
+
+.help-btn{
+  background-color: transparent;
+  color: var(--color-text-muted);
+}
+
+.help-btn:hover, .help-btn:focus {
+  background-color: var(--color-nav-item-hover);
+  color: var(--color-font-main);
+}
+
+.help-btn:active,
+.help-btn:focus:active {
+  background-color: var(--color-nav-item-hover) !important;
+  color: var(--color-font-main) !important;
+}
+
+.chevron-btn{
+  background-color: transparent;
+  color: var(--color-font-main);
+}
+
+.chevron-btn:hover, .chevron-btn:focus {
+  background-color: var(--color-nav-item-hover);
+  color: var(--color-font-main);
+}
+
+.chevron-btn:active, .chevron-btn:focus:active{
+  background-color: var(--color-nav-item-hover) !important; 
+  color: var(--color-font-main) !important; 
+}
+
+.text-error{
+  color: #ff2400;
+}
 
 
 @font-face {
@@ -69,12 +113,12 @@ body {
 
 h1 {
     color: var(--color-perfectblue);
-    font-family: 'Ruska', sans-serif;
+    font-family: 'Edu NSW ACT Cursive', sans-serif;
 }
 
 
 .page-header{
-  font-family: "Ruska", sans-serif;
+  font-family: "Edu NSW ACT Cursive", sans-serif;
   color: var(--color-perfectblue);
 }
 
@@ -244,7 +288,14 @@ h1 {
 .btn-outline-perfectblue:focus {
 	background-color: var(--color-perfectblue);
 	color: var(--color-bg-secondary);
-	border-color: var(--color-perfectblue);
+	border-color: transparent;
+}
+
+.btn-outline-perfectblue:active,
+.btn-outline-perfectblue:focus:active {
+	background-color: var(--color-perfectblue) !important;
+	color: var(--color-bg-secondary) !important;
+	border-color: transparent !important;
 }
 
 .slip-link::placeholder{
@@ -299,6 +350,8 @@ h1 {
 }
 
 
+
+
 .form-header{
   font-family: "Nunito", sans-serif ;
   color: var(--color-perfectblue);
@@ -344,8 +397,9 @@ h1 {
 
   .result-link {
     font-weight: 500;
-    color: var(--color-font-main);
+    color: var(--color-perfectblue);
     overflow-wrap: anywhere;
+    text-decoration: none;
   }
 
   .result-card {
@@ -377,13 +431,12 @@ h1 {
   }
 
     .game-card {
-    background-color: var(--color-bg-secondary);
-    border: 1px solid var(--color-border-main);
-    border-radius: 0.5rem;
-    padding: 1rem;
-    font-family: 'Inter', sans-serif;
+      background-color: var(--color-bg-secondary);
+      border: 1px solid var(--color-border-main);
+      border-radius: 0.5rem;
+      padding: 1rem;
+      font-family: 'Inter', sans-serif;
     }
-
 
     .game-main {
     display: flex;
@@ -421,6 +474,7 @@ h1 {
 
     .teams {
       font-family: "Quicksand", sans-serif;
+      font-weight: 400;
       font-optical-sizing: auto;
     }
     
@@ -436,8 +490,9 @@ h1 {
     }
 
     .odds {
-      font-weight: 600;
-      font-size: 1.1rem;
+      font-family: "Quicksand", sans-serif;
+      font-weight: 400;
+      font-size: 1.3rem;
       color: var(--color-font-main);
       white-space: nowrap;
       }
@@ -471,14 +526,30 @@ h1 {
       font-weight: 500;
       margin-top: 0.5rem;
       cursor: pointer;
-      color: var(--color-perfectblue);
+      color: var(--color-font-main);
+    }
+
+    .summary-flex {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      cursor: pointer;
+    }
+
+    .close-btn {
+      background: none;
+      border: none;
+      font-size: 1.2rem;
+      cursor: pointer;
+      padding: 0;
+      margin: 0;
+      color: inherit;
     }
 
     .extra-info {
       font-size: 0.8rem;
       color: var(--color-text-muted);
       margin-top: 0.25rem;
-      /* padding-left: 1rem; */
     }
 
 
@@ -582,11 +653,72 @@ h1 {
     padding: 1rem;
     border-radius: 1rem;
     box-shadow: 0 0 30px rgba(0, 0, 0, 0.05);
+    
   }
   
   img {
       filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
   }
 
-/* get_data(sport_id, tourney_id) */
-/* parse tourney_games and get game btw two teams */
+  .btn-close{
+    box-shadow: none !important;
+    filter: var(--modal-close-btn) !important; 
+  }
+
+
+  #floating-submit {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    z-index: 999;
+  }
+
+  #floating-submit button{
+    font-family: "Quicksand", sans-serif;
+  }
+
+  .booking-btn{
+    background-color: transparent;
+    color: var(--color-text-muted);
+    border: 1px solid var(--color-perfectblue-muted);
+    transition: all 0.2s ease-in-out;
+  }
+
+  .booking-btn:hover, .booking-btn:focus {
+    background-color: transparent;
+    color: var(--color-font-main);
+    border: 1px solid var(--color-perfectblue);
+  }
+
+  .booking-btn:active,
+  .booking-btn:focus:active {
+    background-color: transparent !important;
+    color: var(--color-font-main) !important;
+    border: 1px solid var(--color-perfectblue) !important;
+  }
+
+  /* popovers */
+  .popover-body {
+    padding: 0.35rem 0.7rem; /* tighter padding */
+  }
+
+.custom-spinner {
+  display: inline-block;
+  width: 1.5rem;                 /* default size */
+  height: 1.5rem;
+  vertical-align: text-bottom;
+  border: 0.25em solid currentColor;   /* uses the element’s text color */
+  border-right-color: transparent;     /* gives the “open gap” effect */
+  border-radius: 50%;                  /* makes it round */
+  animation: custom-spinner .75s linear infinite;
+}
+
+@keyframes custom-spinner {
+  to { transform: rotate(360deg); }
+}
+
+/* text-light utility (from Bootstrap colors) */
+.text-spinner {
+  color: var(--color-spinner) !important;
+}
+
