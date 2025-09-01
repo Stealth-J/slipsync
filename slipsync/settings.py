@@ -84,7 +84,7 @@ WSGI_APPLICATION = 'slipsync.wsgi.application'
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 
 DATABASES = {
-    'default': dj_database_url.config(default = 'postgresql://slipsync_db_user:HWJ8B3fzf5OBK8DbYR4uN3F20MFpufeA@dpg-d2qn77re5dus73c9n55g-a.frankfurt-postgres.render.com/slipsync_db')
+    'default': dj_database_url.config(default = os.environ.get('DATABASE_URL'))
     # {
     #     'ENGINE': 'django.db.backends.sqlite3',
     #     'NAME': BASE_DIR / 'db.sqlite3',
