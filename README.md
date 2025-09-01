@@ -1,6 +1,7 @@
 # SlipSync 🎯
 
-Lightweight Django project to remap and sync betting slips across different platforms.
+Lightweight Django project to remap and sync betting slips across certain platforms.
 
+Check it out on Render: (https://slipsync.onrender.com/)
 
-🚧 Still in development.
+First work i have actually deployed: :)
