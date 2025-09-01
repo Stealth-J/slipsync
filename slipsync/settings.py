@@ -27,7 +27,7 @@ SECRET_KEY = 'django-insecure-3pe--a(jf0gzkqtsor2fc0@i3gv_3v@^utq8yxp!7)j2#18e8n
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ["slipsync.onrender.com", "localhost"]
+ALLOWED_HOSTS = ["slipsync.onrender.com", "localhost", "127.0.0.1"]
 
 
 # Application definition
@@ -84,8 +84,7 @@ WSGI_APPLICATION = 'slipsync.wsgi.application'
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 
 DATABASES = {
-    'default': 
-    dj_database_url.config(default = 'postgresql://slipsync_db_user:HWJ8B3fzf5OBK8DbYR4uN3F20MFpufeA@dpg-d2qn77re5dus73c9n55g-a.frankfurt-postgres.render.com/slipsync_db')
+    'default': dj_database_url.config(default = 'postgresql://slipsync_db_user:HWJ8B3fzf5OBK8DbYR4uN3F20MFpufeA@dpg-d2qn77re5dus73c9n55g-a.frankfurt-postgres.render.com/slipsync_db')
     # {
     #     'ENGINE': 'django.db.backends.sqlite3',
     #     'NAME': BASE_DIR / 'db.sqlite3',
