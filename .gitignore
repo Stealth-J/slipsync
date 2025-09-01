@@ -24,7 +24,6 @@ staticfiles/
 
 # Media files
 media/
-.migrations/
 
 # ignore folder
 sites_json/
