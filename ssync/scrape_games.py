@@ -178,13 +178,6 @@ async def grab_tourney_games_b9(tourney_id, client):
     return data_obj
 
 
-
-
-
-
-
-
-
 async def grab_tourney_games_and_markets_sporty(tourney_id, client):
     t_start = time.perf_counter()
     payload = sporty_payload

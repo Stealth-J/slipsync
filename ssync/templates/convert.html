@@ -2,24 +2,8 @@
 {% load static %}
 {% load custom_filters %}
 
-<style>
-    @media (max-width: 480px) {
-    body {
-        font-size: 0.75rem; /* shrink text */
-    }
-
-    button,
-    input {
-        font-size: 0.75rem;  /* smaller controls */
-        padding: 0.25em 0.5em;
-        line-height: 1.2;
-    }
-    }
-</style>
 
 {% block content  %}
-
-<div class = "convert-page">
 
 <div class="text-center p-2">
     <h2 class="page-header">Convert to {{ platform }} </h2>
@@ -281,13 +265,6 @@
     
 </div>
 
-
-
-
-
-
-
-
 <!-- Help Modal -->
 <div class="modal fade" id="helpModal" tabindex="-1" aria-labelledby="helpModalLabel" aria-hidden="true">
 	<div class="modal-dialog modal-dialog-centered modal-border">
@@ -333,8 +310,6 @@
 			</div>
 		</div>
 	</div>
-</div>
-
 </div>
 
 
@@ -487,7 +462,6 @@
         nextBtn.addEventListener('click', () => {
             toggleBetSite('next')
         })
-        {% comment %} from_siteInput.value = 'Bet9ja' {% endcomment %}
 
         dropdown_items.forEach((item) => {
             item.addEventListener('click', () => {

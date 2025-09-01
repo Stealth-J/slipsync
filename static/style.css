@@ -783,15 +783,15 @@ input[type="checkbox"]::before {
 
 @media (max-width: 576px) {
     .nav-tabs {
-        font-size: 0.45rem !important;
+      font-size: 0.45rem !important;
     }
 
-    .tab-content .mobile-shrink {
-        font-size: 0.75rem; 
+    .tab-content, #betslip_content {
+      font-size: 0.75rem; 
     }
     .tab-content th,
     .tab-content td {
-        padding: 0.25rem 0.4rem;
+      padding: 0.25rem 0.4rem;
     }
 
     .tab-content input,
