@@ -1,0 +1,437 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+
+
+<div class="border-bottom bg-main text-main py-3 admin_page">
+
+    <div class="text-center">
+        <h1 class="h2 mb-5">Admin Page</h1>
+    </div>
+
+    <form id="searchForm" class="input-group mb-3" style="max-width: 400px;" hx-post = "{% url "admin_tourneys" %}" hx-target=".tab-content .tab-pane.active > div" hx-trigger = "keyup from:.search-input changed delay:1s">
+        <input type="text" class="form-control custom-input search-input custom-placeholder" name="query" placeholder="Search...">
+
+        <span class="input-group-text" id="basic-addon1"><i class="bi bi-search"></i></span>
+    </form>
+
+    <!-- Indicator -->
+    <div class="custom-spinner text-spinner" id="spinner" role="status" style="display: none;">
+        <span class="visually-hidden">Loading...</span>
+    </div>
+
+    <!-- Tabs + Actions Row -->
+    <div class="d-flex justify-content-between align-items-center mb-2 flex-wrap">
+
+        <!-- Tabs -->
+        <ul class="nav nav-tabs flex-grow-1" id="adminTabs" role="tablist">
+            <li class="nav-item" role="presentation">
+                <button class="nav-link active tab-btn" id="tab-one-tab" data-bs-toggle="tab" data-bs-target="#tab-one" type="button" role="tab" aria-controls="tab-one" aria-selected="true">
+                    <i class="bi bi-person-x"></i> Unregistered
+                </button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link tab-btn" id="tab-two-tab" data-bs-toggle="tab" data-bs-target="#tab-two" type="button" role="tab" aria-controls="tab-two" aria-selected="false">
+                    <i class="bi bi-person-check "></i> Registered
+                </button>
+            </li>
+        </ul>
+
+    </div>
+
+    
+
+    <div class="tab-content mt-3" id="adminTabsContent">
+        <div class="tab-pane fade show active" id="tab-one" role="tabpanel" aria-labelledby="tab-one-tab">
+
+            <div id="unsupportedBlock">
+
+                {% block notsupported_table %}
+
+                {% with unsupported_tournaments|slice:":200" as first_200 %}
+                    <div class="d-flex justify-content-end align-items-center gap-3 p-2 actions-bar">
+                        <!-- Count -->
+                        <div>
+                            <span class="selected_amount">0</span>
+                            <span> of {{ first_200|length }}</span>
+                        </div>
+
+                        <!-- Buttons -->
+                        <div class="d-flex gap-2">
+                            <button type="button" class="btn btn-sm btn-action" id="tourneyCreateBtn">
+                                <i class="bi bi-plus-circle"></i>
+                                <span class="d-none d-sm-inline">Create</span>
+                            </button>
+
+                            <button hx-post = "{% url "tourney_delete" 'unregistered' %}" hx-include = "#createForm" hx-swap = "none" type="button" class="btn btn-sm btn-action">
+                                <i class="bi bi-trash"></i>
+                                <span class="d-none d-sm-inline">Delete</span>
+                            </button>
+
+                            <button class="btn btn-sm btn-action reloadBtn">
+                                <i class="bi bi-arrow-clockwise"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                {% endwith %}
+                
+                <form class = "mt-3" id = "createForm" hx-post = "{% url "tourney_create" %}" hx-trigger = "click from:#tourneyCreateBtn" hx-swap = "none">
+                    <div class="" style="font-family: 'Space Grotesk', sans-serif;  font-weight: 200;">
+                        
+                        <table class="table table-sm align-middle not-supported-table">
+                            <thead class="ns_t">
+                                <tr class="theaders">
+                                    <th scope="col">
+                                        <input type="checkbox" />
+                                    </th>
+                                    <th scope="col">IDENTIFIER</th>
+                                    <th scope="col">PLATFORM</th>
+                                    <th scope="col">TOURNAMENT NAME</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for tournament in unsupported_tournaments|slice:":200" %}
+                                    <tr id = "tr{{ tournament.id }}">
+                                        <td>
+                                            <input type="checkbox" name = "identifier" value="{{ tournament.market_platform }}||{{ tournament.identifier }}||{{ tournament.tourney_name }}||{{ tournament.country }}" /> 
+                                            <input class="system-checkbox" type="checkbox" name="ids_selected" value = "{{ tournament.id }}" style = "display: none;"> 
+                                        </td>
+
+                                        <td class="responsive-text">{{ tournament.identifier }}</td>
+                                        
+                                        <td class="responsive-text" title = "{{ tournament.country }}"><img src="{{ tournament.country_avatar }}" height = "12px" alt="">
+                                        </td>
+
+                                        <td class="tourney-name-cell" data-identifier="{{ tournament.identifier }}" data-tourney="{{ tournament.tourney_name }}">{{ tournament.tourney_name }}  </td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+
+                    </div>
+
+                </form>
+                <hr>
+
+                <p >Total: {{ unsupported_tournaments|length }}</p>
+
+                {% endblock %}
+
+            </div>
+        </div>
+
+
+        <!--SECOND TAB-->
+
+        <div class="tab-pane fade" id="tab-two" role="tabpanel" aria-labelledby="tab-two-tab">
+            
+            <div id="supportedBlock">
+
+                {% block supported_table %}
+
+                {% with tournaments|slice:":200" as first_200 %}
+                    <div class="d-flex justify-content-end align-items-center gap-3 p-2 actions-bar">
+                        <!-- Count -->
+                        <div>
+                            <span class="selected_amount2">0</span>
+                            <span> of {{ first_200|length }}</span>
+                        </div>
+
+                        <!-- Buttons -->
+                        <div class="d-flex gap-2">
+                            <button class="btn btn-sm btn-action" id="tourneyUpdateBtn">
+                                <i class="bi bi-wrench"></i>
+                                <span class="d-none d-sm-inline">Save changes</span>
+                            </button>
+
+                            <button hx-post = "{% url "tourney_delete" 'registered' %}" hx-include = "#updateForm" hx-swap = "none" type="button" class="btn btn-sm btn-action">
+                                <i class="bi bi-trash"></i>
+                                <span class="d-none d-sm-inline">Delete</span>
+                            </button>
+
+                            <button hx-post="{% url "tourney_filter" %}" hx-target="#supportedBlock" type="button" class="btn btn-sm btn-action">
+                                <i class="bi bi-filter"></i>
+                            </button>
+                            <button class="btn btn-sm btn-action reloadBtn">
+                                <i class="bi bi-arrow-clockwise"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                {% endwith %}
+                
+                <form class = "mt-3" id = "updateForm" hx-post = "{% url "tourney_update" %}" hx-trigger="click from:#tourneyUpdateBtn" hx-swap = "none">
+                    <div class="" style="font-family: 'Space Grotesk', sans-serif;  font-weight: 200;">
+                        
+                        <table class="table table-sm align-middle supported-table">
+                            <thead>
+                                <tr>
+                                    <th scope="col">
+                                        <input type="checkbox" />
+                                    </th>
+                                    <th scope="col">BET9JA</th>
+                                    <th scope="col">SPORTY</th>
+                                    <th scope="col">TOURNAMENT NAME</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for tournament in tournaments|slice:":200" %}
+                                    <tr id = "tr_{{ tournament.id }}">
+                                        <td><input type="checkbox" name = "ids_selected" value="{{ tournament.id }}" /></td>
+
+                                        <td><input type="text" name = "obj_id_{{ tournament.id }}" class="form-control py-0 custom-input" value="{{ tournament.b9_id|default:"" }}"></td>
+
+                                        <td><input type="text" name="obj_id_{{ tournament.id }}" class="form-control py-0 custom-input" value="{{ tournament.sporty_id|default:"" }}"></td>
+
+                                        <td >{{ tournament.sporty_name|default:tournament.b9_name }}</td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+
+                    </div>
+
+                </form>
+                <hr>
+
+                <p >Total: {{ tournaments|length }}</p>
+
+                {% endblock %}
+
+            </div>
+
+        </div>
+    </div>
+
+
+</div>
+
+
+
+<div class="position-fixed bottom-0 end-0 p-3" style="z-index: 11">
+    <div id="liveToast" class="toast hide bg-main text-main" role="alert" aria-live="assertive" aria-atomic="true">
+        <div class="toast-header bg-second text-main">
+            <img src="{% static "img/slipsync_brand.png" %}" height = "20" class="rounded me-2" alt="...">
+            <strong class="me-auto">Db</strong>
+            <small>Just now</small>
+            <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+        </div>
+        <div class="toast-body">
+    
+        </div>
+    </div>
+</div>
+
+
+{% endblock %}
+
+{% block script %}
+
+<script>
+    function initNotSupportedCheckboxes(){
+        const selectAllCheckbox = document.querySelector(".not-supported-table input[type ='checkbox']");
+        const rowCheckboxes = document.querySelectorAll(".not-supported-table tbody input[type='checkbox']:not(.system-checkbox)");
+        const selectedAmountSpan = document.querySelector(".selected_amount");
+
+        function updateSelectedCount() {
+            const checkedCount = Array.from(rowCheckboxes).filter(cb => cb.checked).length;
+            selectedAmountSpan.textContent = checkedCount;
+        }
+
+        if (selectAllCheckbox && rowCheckboxes && selectedAmountSpan){
+            selectAllCheckbox.addEventListener("change", function() {
+                rowCheckboxes.forEach(cb => {
+                    cb.checked = selectAllCheckbox.checked;
+
+                    const systemCb = cb.closest('td').querySelector('input.system-checkbox');
+                    if (systemCb) systemCb.checked = cb.checked;
+                });
+                updateSelectedCount();
+            });
+        
+            rowCheckboxes.forEach(cb => {
+                cb.addEventListener("change", function() {
+                    updateSelectedCount();
+                    selectAllCheckbox.checked = Array.from(rowCheckboxes).every(cb => cb.checked);
+
+                    const systemCb = cb.closest('td').querySelector('input.system-checkbox');
+                    if (systemCb) systemCb.checked = cb.checked;
+                });
+            });
+
+            updateSelectedCount();
+        }
+    }
+
+    function initSupportedCheckboxes() {
+        const selectAllCheckbox = document.querySelector(".supported-table input[type='checkbox']");
+        const rowCheckboxes = document.querySelectorAll(".supported-table tbody input[type='checkbox']");
+        const selectedAmountSpan = document.querySelector(".selected_amount2");
+
+        function updateSelectedCount() {
+            const checkedCount = Array.from(rowCheckboxes).filter(cb => cb.checked).length;
+            selectedAmountSpan.textContent = checkedCount;
+        }
+
+        if (selectAllCheckbox && rowCheckboxes && selectedAmountSpan){
+            selectAllCheckbox.addEventListener("change", function() {
+                rowCheckboxes.forEach(cb => cb.checked = selectAllCheckbox.checked);
+                updateSelectedCount();
+            });
+        
+            rowCheckboxes.forEach(cb => {
+                cb.addEventListener("change", function() {
+                    updateSelectedCount();
+                    selectAllCheckbox.checked = Array.from(rowCheckboxes).every(cb => cb.checked);
+                });
+            });
+
+            updateSelectedCount();
+        }
+    }
+
+    function copyTourneyCombination(){
+        const notsupportedTable = document.querySelector(".not-supported-table tbody");
+
+        if (notsupportedTable) {
+            notsupportedTable.addEventListener('dblclick', (e) => {
+                const cell = e.target.closest(".tourney-name-cell");
+                if (!cell) return;
+                if (cell.querySelector('.copy-btn')) return;
+
+                const btn = document.createElement("button");
+                btn.className = "btn btn-sm btn-action copy-btn ms-2";
+                btn.innerHTML = `<i class="bi bi-clipboard"></i>`;
+                btn.type = "button";
+                
+                cell.appendChild(btn)
+                btn.addEventListener("click", () => {
+                    const textToCopy = `${cell.dataset.identifier}||${cell.dataset.tourney}`;
+                    navigator.clipboard.writeText(textToCopy)
+                        .then(() => {
+                            btn.innerHTML = `<i class="bi bi-check-lg"></i>`; 
+                            setTimeout(() => btn.innerHTML = `<i class="bi bi-clipboard"></i>`, 1000);
+                        });
+                });
+
+                const removeBtn = (evt) => {
+                    if (!cell.contains(evt.target)) {
+                        btn.remove();
+                        document.removeEventListener("click", removeBtn);
+                    }
+                };
+                document.addEventListener("click", removeBtn);
+            })
+        }
+    }
+
+    function reloadTournaments() {
+        const reloadBtns = document.querySelectorAll('.reloadBtn')
+        reloadBtns.forEach(reloadBtn => {
+
+            reloadBtn.addEventListener('click', function(e) {
+                const activePane = document.querySelector(".tab-pane.active");
+                const searchInput = document.querySelector('#searchForm .search-input')
+                if (activePane) {
+                    var active_tab = activePane.id === "tab-one" ? "notsupported_table" : "supported_table";
+                } else {
+                    return;
+                }
+    
+                htmx.ajax('POST', '/admin-tourneys', {
+                    target: activePane.querySelector('div'),
+                    swap: 'innerHTML',
+                    values: {
+                        query: [''],
+                        active_tab: [active_tab]
+                    }
+                });
+                searchInput.value = ''
+            });
+        })
+
+    }
+
+    function uncheckBoxes() {
+        document.getElementById('tourneyCreateBtn').addEventListener('click', function() {
+            document.querySelectorAll("input[type='checkbox']").forEach(cb => {
+                cb.checked = false;
+            })
+        })
+    }
+
+
+    document.addEventListener("DOMContentLoaded", function() {
+        let skeletonTimeout = null;
+
+        initNotSupportedCheckboxes();
+        initSupportedCheckboxes();
+        copyTourneyCombination();
+        reloadTournaments();
+        uncheckBoxes();
+
+        document.addEventListener("htmx:configRequest", function (event) {
+            if (event.target.id === "searchForm") {
+                const activePane = document.querySelector(".tab-pane.active");
+                if (activePane) {
+                    event.detail.parameters['active_tab'] = activePane.id === "tab-one" ? "notsupported_table" : "supported_table";
+                }
+            } 
+        });
+
+        document.body.addEventListener('message_', (e) => {
+            const toastBody = document.querySelector("#liveToast .toast-body");
+            if (toastBody && e.detail.value) {
+                toastBody.textContent = e.detail.value;
+            }
+
+            const toastElement = document.getElementById("liveToast");
+            const toast = new bootstrap.Toast(toastElement);
+            toast.show();
+        })
+
+        document.body.addEventListener('remove_rows', (e) => {
+            const ids_ = e.detail.value
+            if (ids_) {
+                ids_.forEach(id => {
+                    document.getElementById(`tr${id}`).remove()
+                })
+            }
+        })
+
+        // HX INDICATOR
+        document.body.addEventListener('htmx:beforeRequest', function (e) {
+            if (e.target.closest('#searchForm')){
+                skeletonTimeout = setTimeout(() => {
+                    document.getElementById('spinner').style.display = 'block'
+                }, 400); 
+            } 
+        });
+
+        document.body.addEventListener('htmx:afterRequest', function (e) {
+            if (e.target.closest('#searchForm')){
+                clearTimeout(skeletonTimeout);
+                document.getElementById('spinner').style.display = 'none'
+            } 
+        });
+        
+    });
+
+    document.body.addEventListener('htmx:afterSwap', function() {
+        initNotSupportedCheckboxes();
+        initSupportedCheckboxes();
+        copyTourneyCombination();
+        reloadTournaments();
+        uncheckBoxes();
+    });
+
+
+    
+    
+</script>
+
+
+
+{% endblock %}

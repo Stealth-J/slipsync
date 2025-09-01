@@ -11,8 +11,6 @@ from asgiref.sync import async_to_sync
 SLIP_DOMAINS = {
     "sportybet": ["sportybet.com", "sporty.com", "sporty.ng", "www.sportybet.com", "www.sporty.com", "www.sporty.ng"],
     "bet9ja": ["www.bet9ja.com", "www.shop.bet9ja.com", "www.coupon.bet9ja.com", "bet9ja.com", "shop.bet9ja.com", "coupon.bet9ja.com"],
-    "betking": ["www.betking.com", "www.betking.ng", "betking.com", "betking.ng"],
-    "nairabet": ["www.nairabet.com", "www.nairabet.ng", "nairabet.com", "nairabet.ng"],
 }
 
 HEADERS = {
@@ -100,9 +98,6 @@ async def parse_sporty(data, platforms, objs, client):
     tourney_json_objs = await asyncio.gather(*scrape_tasks, return_exceptions = True)
     tourney_json_objs = filter_exceptions_out(tourney_json_objs)
 
-    # with open('sites_json/b9_league.json', 'w', encoding = 'utf-8') as f:
-    #     json.dump(tourney_json_objs, f, indent = 4, ensure_ascii = False)
-
     tourney_json_lookup = { obj.id_:obj.json_ for obj in tourney_json_objs }
     selection_json_all = [(result, combine_tourney_json(tourney_json_lookup, result.tourney_ids)) for result in selections ]
 
@@ -142,9 +137,6 @@ async def parse_b9(data, platforms, objs, client):
     scrape_tasks = [ grab_tournament_json_func(tourney_id, client) for tourney_id in tourney_ids_all ]
     tourney_json_objs = await asyncio.gather(*scrape_tasks, return_exceptions =  True)
     tourney_json_objs = filter_exceptions_out(tourney_json_objs)
-
-    # with open('sites_json/b9_league2.json', 'w', encoding = 'utf-8') as f:
-    #     json.dump(tourney_json_objs, f, indent = 4, ensure_ascii = False)
 
     tourney_json_lookup = { obj.id_: obj.json_ for obj in tourney_json_objs }
     selection_json_all = [(result, combine_tourney_json(tourney_json_lookup, result.tourney_ids)) for result in selections ]
@@ -197,7 +189,7 @@ async def parse_slip(url, platforms, objs):
 
 
 
-#  RK9PE4   QBNY0N  L1ESLG  JJMUM7  XCCYD7  K3U01W  QTM2U0
+#  RK9PE4   QBNY0N  L1ESLG  JJMUM7  XCCYD7  K3U01W  QTM2U0  W3JQRN
 # 3B2JVWS  3B2RPBV  3BK86TD  3BK8SPJ    3BSKBPL
 
 # ('1', '3')

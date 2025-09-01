@@ -1,6 +1,7 @@
 from django import template
 from types import SimpleNamespace
 import json
+from datetime import datetime
 
 register = template.Library()
 
@@ -19,3 +20,8 @@ def convert_to_json(objs_):
 
     print(type(final_string), final_string)
     return final_string
+
+
+@register.filter
+def current_time(something):
+    return datetime.now()

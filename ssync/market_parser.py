@@ -807,7 +807,7 @@ def get_pick_obj(pick, market_obj):
             break
 
     if pick_obj:
-        return market_obj.sporty_id, market_obj.specifier, pick_obj.outcome_id
+        return market_obj.sporty_id, pick_obj.specifier, pick_obj.outcome_id
     
     return None
 

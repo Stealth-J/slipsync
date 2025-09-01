@@ -70,6 +70,14 @@ def check_game_expiry(string):
     return int(dt.timestamp() * 1000) < int(dt_now.timestamp() * 1000)
 
 
+def both_platforms_represented(ids):
+    id1, id2 = ids
+    return 'bet9ja' in id1 and 'sportybet' in id2 or 'bet9ja' in id2 and 'sportybet' in id1
+
+def update_field(string):
+    return '||' in string
+
+
 def get_url(slip_code, platform):
     try:
         url_raw = sites_urls.get(platform, None)
@@ -247,6 +255,21 @@ def get_tourney_objects(tourney_field, tourneys_all, tourney_id):
             tourney_objs.append(obj)
     
     return tourney_objs
+
+
+def get_tourney_obj(tourneys_all, props, field_name):
+    tourney_obj = None
+    c_desc, desc = props
+
+    for each in tourneys_all:
+        if each.country.lower() == c_desc.lower() and getattr(each, field_name) == desc:
+            tourney_obj = each
+            break
+    
+    if tourney_obj:
+        return True, tourney_obj
+    
+    return False, tourney_obj
 
 
 def create_booking_format(market_obj, pick_txt, teams, platforms):

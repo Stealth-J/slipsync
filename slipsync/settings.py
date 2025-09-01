@@ -41,6 +41,8 @@ INSTALLED_APPS = [
     'django_htmx',
     'widget_tweaks',
     'django_extensions',
+    'django_celery_beat',
+    'django.contrib.humanize',
 ]
 
 MIDDLEWARE = [
@@ -127,3 +129,15 @@ STATICFILES_DIRS = [ BASE_DIR / 'static']
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+from celery.schedules import crontab
+from datetime import timedelta
+
+CELERY_BROKER_URL = 'redis://localhost:6379/0'
+CELERY_BROKER_CONNECTION_RETRY_ON_STARTUP = True
+CELERY_BEAT_SCHEDULE = {
+    'find-new-tournaments': {
+        'task': "ssync.tasks.find_new_tournaments",
+        'schedule': timedelta(minutes = 2),
+    },
+}

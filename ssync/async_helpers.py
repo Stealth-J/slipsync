@@ -49,6 +49,7 @@ def parse_and_scrape_sporty(id_, objs, dict_items, platforms):
             tourney_ids = tourney_ids,
             booking_data = booking_data,
             market_supported = market_supported,
+            market_id = game_fields['market_id'],
         )
 
 
@@ -108,6 +109,7 @@ def parse_and_scrape_b9(id_, objs, dict_items, platforms):
             tourney_ids = tourney_ids,
             booking_data = booking_data,
             market_supported = market_supported,
+            market_id = game_fields['market_id'],
         )
 
 

@@ -1,11 +1,9 @@
-SUPPORTED_SITES = ['Bet9ja', 'BetKing', 'SportyBet', 'NairaBet']
+SUPPORTED_SITES = ['Bet9ja', 'SportyBet']
 sites_in_lower = [site.lower() for site in SUPPORTED_SITES]
 
 logos = {
     'sportybet': 'img/sporty_logo.png',
     'bet9ja': 'img/b9_logo.png',
-    'betking': 'img/betking.png',
-    'nairabet': 'img/nairabet.png',
 }
 
 code_links = {

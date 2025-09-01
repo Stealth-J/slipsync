@@ -111,9 +111,13 @@ def book_sporty(valid_games):
         response.raise_for_status()
         data = response.json()
 
+        if data.get("bizCode") != 10000:
+            return (False, data.get("message", "Unknown error"))
+
         booking_code = data['data']['shareCode']
     
     except Exception as e:
         return (False, e)
     
     return (True, booking_code)
+

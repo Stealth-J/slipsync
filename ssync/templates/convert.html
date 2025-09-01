@@ -2,7 +2,24 @@
 {% load static %}
 {% load custom_filters %}
 
+<style>
+    @media (max-width: 480px) {
+    body {
+        font-size: 0.75rem; /* shrink text */
+    }
+
+    button,
+    input {
+        font-size: 0.75rem;  /* smaller controls */
+        padding: 0.25em 0.5em;
+        line-height: 1.2;
+    }
+    }
+</style>
+
 {% block content  %}
+
+<div class = "convert-page">
 
 <div class="text-center p-2">
     <h2 class="page-header">Convert to {{ platform }} </h2>
@@ -22,7 +39,7 @@
                     <div class="input-group">
                         <button type="button" title="Need help?" class="btn border-0 help-btn" data-bs-toggle="modal" data-bs-target="#helpModal"><i class="fas fa-question"></i></button>
 
-                        <input type="text" class="form-control slip-link custom-input" placeholder="Enter slip code" name="slip_code" required> 
+                        <input type="text" class="form-control custom-placeholder custom-input" placeholder="Enter slip code" name="slip_code" required> 
 
                         <button type="button" class="btn border-0 text-main chevron-btn" id="convertfromDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                              <i class="fas fa-chevron-down"></i>
@@ -30,7 +47,7 @@
 
                         <ul class="dropdown-menu" id="from_siteDropdown" aria-labelledby="convertfromDropdown">
                             {% for site in sites %}
-                                <li><a class="dropdown-item" style="cursor: pointer;">{{site}}</a></li>
+                                <li><a class="dropdown-item" href="#" style="cursor: pointer;">{{site}}</a></li>
                             {% endfor %}
                         
                         </ul>
@@ -61,7 +78,6 @@
         </form>
 
         <div class="text-error p-3" id="errorContainer"></div>
-
 
     </div>
 
@@ -188,7 +204,6 @@
                                     {% else %}
                                         <div class="odds" style="color: #ff2400;" title="invalid">{{ game.odds }}</div>
                                     {% endif %}
-                                    {% comment %} <p class="text-main">{{ game }}</p> {% endcomment %}
                                 </div>
                                 
                                 <!-- Toggle-able Extra Info -->
@@ -260,8 +275,6 @@
             
         </div>
 
-
-
     </div>
     
     
@@ -322,7 +335,7 @@
 	</div>
 </div>
 
-
+</div>
 
 
 {% endblock %}
@@ -437,9 +450,6 @@
             }
         });
 
-
-
-
         function toggleBetSite(direction) {
             let site = bettingSite.textContent
             let index_ = sites.indexOf(site)
@@ -477,7 +487,7 @@
         nextBtn.addEventListener('click', () => {
             toggleBetSite('next')
         })
-from_siteInput.value = 'Bet9ja'
+        {% comment %} from_siteInput.value = 'Bet9ja' {% endcomment %}
 
         dropdown_items.forEach((item) => {
             item.addEventListener('click', () => {

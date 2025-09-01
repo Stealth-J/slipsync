@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+    <div class="border-bottom bg-main text-main py-3 ">
+
+        <div class="text-center">
+            <h1 class="h2 mb-5">Admin Page</h1>
+        </div>
+        
+        <table class="table">
+            <thead>
+                <tr>
+                <th scope="col">Id</th>
+                <th scope="col">Name</th>
+                <th scope="col">Platform</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for market in un_markets %}
+                    <tr>
+                        <td>{{ market.identifier }}</td>
+                        <td>{{ market.name }}</td>
+                        <td>{{ market.market_platform }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+{% endblock %}

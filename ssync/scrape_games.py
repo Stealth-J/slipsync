@@ -8,6 +8,10 @@ from types import SimpleNamespace
 from datetime import datetime, timezone
 
 
+class TaskError(Exception):
+    pass
+
+
 b9_tourney_games_url = 'https://sports.bet9ja.com/desktop/feapi/PalimpsestAjax/GetEventsInGroupV2?GROUPID={}&DISP=0&GROUPMARKETID=1&v_cache_version=1.285.4.198'
 b9_game_markets_url = 'https://sports.bet9ja.com/desktop/feapi/PalimpsestAjax/GetEvent?EVENTID={}&v_cache_version=1.285.0.198'
 sporty_tourney_games_url = 'https://www.sportybet.com/api/ng/factsCenter/pcEvents'
@@ -47,6 +51,12 @@ GAME_MARKET_URL_HEADERS = {
 def get_sporty_id_digit(string):
     digit = re.sub(r'sr:match:', '', string)
     return digit
+
+
+def get_current_time_formatted():
+    timestamp_now = datetime.now().replace(tzinfo = timezone.utc)
+    timestamp_now = int(timestamp_now.timestamp() * 1000)
+    return timestamp_now
 
 
 def retrieve_matches_teams_b9(matches_data):
@@ -109,8 +119,7 @@ async def check_market_validity_sporty(client, selection):
         if selection.tourney_ids and selection.booking_data:
             s_market_id, s_specifier, s_pick_id = selection.booking_data
 
-            timestamp_now = datetime.now().replace(tzinfo = timezone.utc)
-            timestamp_now = int(timestamp_now.timestamp() * 1000)
+            timestamp_now = get_current_time_formatted()
             game_url = sporty_game_markets_url.format(game_id, timestamp_now)
 
             try:
